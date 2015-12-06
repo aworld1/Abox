@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+    <body>
+<canvas id="canvas"></canvas>
+        <script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+canvas.width = "375";
+canvas.height = "575";
+var one;
+var two;
+var three;
+var four;
+var five;
+var six;
+var seven;
+var eight;
+var nine;
+var locate = 1
+var listLoc = [1];
+// Circles!
+function circle(x, y, radius, fillCircle) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+    if (fillCircle) {
+        ctx.fill();
+    } else {
+        ctx.stroke();
+    }
+}
+var locatePlayer = function () {
+    ctx.fillStyle="lightblue";
+    ctx.strokeStyle = "lightblue";
+    if (locate == 1) {
+    circle(65, 105, 10, true);
+    }
+    else if (locate == 2) {
+    circle(185, 105, 10, true);
+    }
+    else if (locate == 3) {
+    circle(305, 105, 10, true);
+    }
+    else if (locate == 4) {
+    circle(65, 225, 10, true);
+    }
+    else if (locate == 5) {
+    circle(185, 225, 10, true);
+    }
+    else if (locate == 6) {
+    circle(305, 225, 10, true);
+    }
+    else if (locate == 7) {
+    circle(65, 345, 10, true);
+    }
+    else if (locate == 8) {
+    circle(185, 345, 10, true);
+    }
+    else if (locate == 9) {
+    circle(305, 345, 10, true);
+    }
+}
+var drawContents = function(a, b, c, d, e, f, g, h, i) {
+    // Create main nine squares
+    ctx.fillStyle="dimgray";
+    ctx.strokeStyle = "Gray";
+    ctx.fillRect(30,70,70,70);
+    ctx.fillRect(150,70,70,70);
+    ctx.fillRect(270,70,70,70);
+    ctx.fillRect(30,190,70,70);
+    ctx.fillRect(150,190,70,70);
+    ctx.fillRect(270,190,70,70);
+    ctx.fillRect(30,310,70,70);
+    ctx.fillRect(150,310,70,70);
+    ctx.fillRect(270,310,70,70);
+    locatePlayer();
+    // Make Symbols
+    ctx.fillStyle="dimgray";
+    ctx.strokeStyle = "Gray";
+    ctx.lineWidth = 4;
+    ctx.beginPath;
+    if (a == 2) {
+        ctx.moveTo(40, 80);
+        ctx.lineTo(90, 130);
+        ctx.moveTo(40, 130);
+        ctx.lineTo(90, 80);
+    }
+    if (b == 2) {
+        ctx.moveTo(160, 80);
+        ctx.lineTo(210, 130);
+        ctx.moveTo(160, 130);
+        ctx.lineTo(210, 80);
+    }
+    if (c == 2) {
+        ctx.moveTo(280, 80);
+        ctx.lineTo(330, 130);
+        ctx.moveTo(280, 130);
+        ctx.lineTo(330, 80);
+    }
+    if (d == 2) {
+        ctx.moveTo(40, 200);
+        ctx.lineTo(90, 250);
+        ctx.moveTo(40, 250);
+        ctx.lineTo(90, 200);
+    }
+    if (e == 2) {
+        ctx.moveTo(160, 200);
+        ctx.lineTo(210, 250);
+        ctx.moveTo(160, 250);
+        ctx.lineTo(210, 200);
+    }
+    if (f == 2) {
+        ctx.moveTo(280, 200);
+        ctx.lineTo(330, 250);
+        ctx.moveTo(280, 250);
+        ctx.lineTo(330, 200);
+    }
+    if (g == 2) {
+        ctx.moveTo(40, 320);
+        ctx.lineTo(90, 370);
+        ctx.moveTo(40, 370);
+        ctx.lineTo(90, 320);
+    }
+    if (h == 2) {
+        ctx.moveTo(160, 320);
+        ctx.lineTo(210, 370);
+        ctx.moveTo(160, 370);
+        ctx.lineTo(210, 320);
+    }
+    if (i == 2) {
+        ctx.moveTo(280, 320);
+        ctx.lineTo(330, 370);
+        ctx.moveTo(280, 370);
+        ctx.lineTo(330, 320);
+    }
+    ctx.stroke();
+}
+var drawLevel = function(a, b, c, d, e, f, g, h, i) {
+    locate = 1;
+    listLoc = [];
+    listLoc = [1];
+    drawContents(a, b, c, d, e, f, g, h, i);
+};
+var checkLevel = function() {
+localStorage.level;
+if(!(localStorage.level)) {
+    localStorage.level = 1;
+}
+if (Number(localStorage.level) == 1) {
+    one = 1;
+    two = 1;
+    three = 2;
+    four = 1;
+    five = 1;
+    six = 1;
+    seven = 1;
+    eight = 1;
+    nine = 1;
+}
+drawLevel(one, two, three, four, five, six, seven, eight, nine);
+};
+// Check to see if overlap occured
+var x;
+var y;
+var sortedListLoc = [];
+var checkOverlap = function(a, b, c, d, e, f, g, h, i) {
+sortedListLoc = listLoc.sort();
+x = 0
+y = 0
+for (y=0; sortedListLoc[x] == 1; x++) {
+    y++;
+}
+if (y > a) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 2; x++) {
+    y++;
+}
+if (y > b) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 3; x++) {
+    y++;
+}
+if (y > c) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 4; x++) {
+    y++;
+}
+if (y > d) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 5; x++) {
+    y++;
+}
+if (y > e) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 6; x++) {
+    y++;
+}
+if (y > f) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 7; x++) {
+    y++;
+}
+if (y > g) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 8; x++) {
+    y++;
+}
+if (y > h) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    for (y=0; sortedListLoc[x] == 9; x++) {
+    y++;
+}
+if (y > i) {
+    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+}
+    alert(listLoc)
+};
+
+checkLevel();
+// Swipe Detection
+document.addEventListener('touchstart', handleTouchStart, false);        
+document.addEventListener('touchmove', handleTouchMove, false);
+var xDown = null;                                                        
+var yDown = null;                                                        
+
+function handleTouchStart(evt) {                                         
+    xDown = evt.touches[0].clientX;                                      
+    yDown = evt.touches[0].clientY;
+}                                                
+
+function handleTouchMove(evt) {
+    if ( ! xDown || ! yDown ) {
+        return;
+    }
+    var xUp = evt.touches[0].clientX;                                    
+    var yUp = evt.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {//most significant
+        if ( xDiff > 0 ) {
+            if (locate == 3) {
+                locate = 2;
+                listLoc.push(2);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 2) {
+                locate = 1;
+                listLoc.push(1);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 6) {
+                locate = 5;
+                listLoc.push(5);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 5) {
+                locate = 4;
+                listLoc.push(4);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 9) {
+                locate = 8;
+                listLoc.push(8);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 8) {
+                locate = 7;
+                listLoc.push(7);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+        } else {
+            if (locate == 1) {
+                locate = 2;
+                listLoc.push(2);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 2) {
+                locate = 3;
+                listLoc.push(3);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 4) {
+                locate = 5;
+                listLoc.push(5);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 5) {
+                locate = 6;
+                listLoc.push(6);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 7) {
+                locate = 8;
+                listLoc.push(8);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 8) {
+                locate = 9;
+                listLoc.push(9);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+        }                       
+    } else {
+        if ( yDiff > 0 ) {
+            if (locate == 7) {
+                locate = 4;
+                listLoc.push(4);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 8) {
+                locate = 5;
+                listLoc.push(5);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 9) {
+                locate = 6;
+                listLoc.push(6);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 4) {
+                locate = 1;
+                listLoc.push(1);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 5) {
+                locate = 2;
+                listLoc.push(2);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 6) {
+                locate = 3;
+                listLoc.push(3);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+        } else { 
+            if (locate == 1) {
+                locate = 4;
+                listLoc.push(4);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 2) {
+                locate = 5;
+                listLoc.push(5);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 3) {
+                locate = 6;
+                listLoc.push(6);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 4) {
+                locate = 7;
+                listLoc.push(7);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 5) {
+                locate = 8;
+                listLoc.push(8);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+            else if (locate == 6) {
+                locate = 9;
+                listLoc.push(9);
+                checkOverlap(one, two, three, four, five, six, seven, eight, nine);
+                locatePlayer();
+            }
+        }                                                                 
+    }
+    // reset values
+    xDown = null;
+    yDown = null;
+}
+</script>
+    <style>
+    body {
+            background-color: gray
+        }
+    </style>
+    </body>
+</html>
