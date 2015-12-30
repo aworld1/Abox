@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
     <body>
+        <audio id="myAudio">
+            <source src="song.mp3" type="audio/mp3">
+            <!--<source src="mysongs/song1.ogg" type="audio/ogg; codecs=vorbis">-->
+           </audio>
 <canvas id="canvas"></canvas>
+        <p id="p"></p>
         <script>
+var myAudio = document.getElementById("myAudio");
+myAudio.play();
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = "375";
-canvas.height = "575";
+canvas.height = "555";
+localStorage.level = 99;
+var width = canvas.width;
+var height = canvas.height;
 var one;
 var two;
 var three;
@@ -16,10 +26,14 @@ var six;
 var seven;
 var eight;
 var nine;
-var locate = 1
+var locate = 1;
 var listLoc = [1];
+var win = [];
+var activate = 0;
+var maxLevel;
+var showInfo = 0;
 // Circles!
-function circle(x, y, radius, fillCircle) {
+var circle = function (x, y, radius, fillCircle) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2, false);
     if (fillCircle) {
@@ -28,9 +42,86 @@ function circle(x, y, radius, fillCircle) {
         ctx.stroke();
     }
 }
+var graphicCircle = function(a,b,c,d,e,f,g,h) {
+    ctx.fillStyle="crimson";
+    ctx.strokeStyle = "crimson";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    circle(a, b, c, d);
+    ctx.moveTo(e, f);
+    ctx.lineTo(g, h);
+    ctx.stroke();
+}
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
+var drawName = function() {
+    ctx.beginPath();
+    ctx.strokeStyle = "dimgray";
+    ctx.lineWidth = 4;
+    ctx.moveTo(100,60);
+    ctx.lineTo(120,5);
+    ctx.lineTo(140,60);
+    ctx.moveTo(130,30);
+    ctx.lineTo(110,30);
+    ctx.moveTo(150,5);
+    ctx.lineTo(150,60);
+    // Circle 1
+    // Circle 2
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.strokeStyle = "crimson";
+    ctx.moveTo(185,25);
+    ctx.lineTo(225,65);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.strokeStyle = "dimgray";
+    ctx.rect(230,30,30,30);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.strokeStyle = "darkOrange";
+    ctx.moveTo(235,35);
+    ctx.lineTo(255,55);
+    ctx.moveTo(255,35);
+    ctx.lineTo(235,55);
+    ctx.stroke();
+    ctx.strokeStyle = "dimgray";
+    circle(165, 45, 15, false);
+    ctx.strokeStyle = "crimson";
+    circle(205, 45, 15, false);
+}
+var drawX = function (a,b,c,d) {
+    ctx.fillStyle="darkOrange";
+    ctx.strokeStyle = "darkOrange";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(a, b);
+    ctx.lineTo(c, d);
+    ctx.moveTo(a, d);
+    ctx.lineTo(c, b);
+    ctx.stroke();
+}
+var drawT = function (a,b,c,d,e) {
+    ctx.fillStyle="gold";
+    ctx.strokeStyle = "gold";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(a, b);
+    ctx.lineTo(c, d);
+    ctx.lineTo(e, d);
+    ctx.lineTo(a, b);
+    ctx.stroke();
+}
 var locatePlayer = function () {
+    if (timeOn) {
+        drawClock(timeLeft);
+    }
     ctx.fillStyle="lightblue";
-    ctx.strokeStyle = "lightblue";
+    ctx.strokeStyle = "Gray";
     if (locate == 1) {
     circle(65, 105, 10, true);
     }
@@ -58,111 +149,2157 @@ var locatePlayer = function () {
     else if (locate == 9) {
     circle(305, 345, 10, true);
     }
+    ctx.stroke();
+    if (moveGo && moveValid) {
+    moveValid = false;
+    checkMoveOverlap();
+    moveValid = true;
+    }
 }
+var drawS = function (a,b) {
+    ctx.fillStyle="lime";
+    ctx.strokeStyle = "lime";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.rect(a,b,50,50);
+    ctx.stroke();
+}
+var drawPent = function (a,b,c,d,e,f,g,h,i) {
+    ctx.fillStyle="skyblue";
+    ctx.strokeStyle = "skyblue";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(a,g);
+    ctx.lineTo(b,h);
+    ctx.lineTo(c,i);
+    ctx.lineTo(d,i);
+    ctx.lineTo(e,h);
+    ctx.lineTo(f,g);
+    ctx.stroke();
+}
+var drawHex = function (a,b) {
+    ctx.fillStyle="darkblue";
+    ctx.strokeStyle = "darkblue";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo((a + 10),b);
+    ctx.lineTo((a - 5),(b + 25));
+    ctx.lineTo((a + 10),(b + 50));
+    ctx.lineTo((a + 30),(b + 50));
+    ctx.lineTo((a + 45),(b + 25));
+    ctx.lineTo((a + 30),b);
+    ctx.lineTo((a + 10),b);
+    ctx.stroke();
+}
+var drawHepta = function (a,b) {
+    ctx.fillStyle="purple";
+    ctx.strokeStyle = "purple";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo((a + 65),(b + 80))
+    ctx.lineTo((a + 50),(b + 90))
+    ctx.lineTo((a + 40),(b + 110))
+    ctx.lineTo((a + 55),(b + 130))
+    ctx.lineTo((a + 75),(b + 130))
+    ctx.lineTo((a + 90),(b + 110))
+    ctx.lineTo((a + 80),(b + 90))
+    ctx.lineTo((a + 65),(b + 80))
+    ctx.stroke();
+}
+var rumble = 0;
 var drawContents = function(a, b, c, d, e, f, g, h, i) {
     // Create main nine squares
+    ctx.clearRect(0, 0, width, height);
     ctx.fillStyle="dimgray";
     ctx.strokeStyle = "Gray";
-    ctx.fillRect(30,70,70,70);
-    ctx.fillRect(150,70,70,70);
-    ctx.fillRect(270,70,70,70);
-    ctx.fillRect(30,190,70,70);
-    ctx.fillRect(150,190,70,70);
-    ctx.fillRect(270,190,70,70);
-    ctx.fillRect(30,310,70,70);
-    ctx.fillRect(150,310,70,70);
-    ctx.fillRect(270,310,70,70);
-    locatePlayer();
+    ctx.fillRect((30 + rumble),70,70,70);
+    ctx.fillRect((150 + rumble),70,70,70);
+    ctx.fillRect((270 + rumble),70,70,70);
+    ctx.fillRect((30 + rumble),190,70,70);
+    ctx.fillRect((150 + rumble),190,70,70);
+    ctx.fillRect((270 + rumble),190,70,70);
+    ctx.fillRect((30 + rumble),310,70,70);
+    ctx.fillRect((150 + rumble),310,70,70);
+    ctx.fillRect((270 + rumble),310,70,70);
+    drawName();
+    drawInfo();
+    drawRelevel();
+    if (showInfo == 1) {
+    drawText();
+    }
+    if (timeOn && stopOverlap == 0) {
+        drawClock(timeLeft);
+    }
     // Make Symbols
     ctx.fillStyle="dimgray";
     ctx.strokeStyle = "Gray";
     ctx.lineWidth = 4;
-    ctx.beginPath;
+    ctx.beginPath();
     if (a == 2) {
-        ctx.moveTo(40, 80);
-        ctx.lineTo(90, 130);
-        ctx.moveTo(40, 130);
-        ctx.lineTo(90, 80);
+        drawX(40,80,90,130);
+    }
+    else if (a == 3) {
+        drawT(65,80,90,130,40);
+    }
+    else if (a == 0) {
+        graphicCircle(65, 105, 25, false, 40, 80, 90, 130);
+    }
+    else if (a == 4) {
+        drawS(40,80);
+    }
+    else if (a == 5) {
+        drawPent(65,40,50,80,90,65,80,100,130);
+    }
+    else if (a == 6) {
+        drawHex(45,80);
+    }
+    else if (a == 7) {
+        drawHepta(0,0);
     }
     if (b == 2) {
-        ctx.moveTo(160, 80);
-        ctx.lineTo(210, 130);
-        ctx.moveTo(160, 130);
-        ctx.lineTo(210, 80);
+        drawX(160,80,210,130);
+    }
+    else if (b == 3) {
+        drawT(185,80,210,130,160);
+    }
+    else if (b == 0) {
+        graphicCircle(185, 105, 25, false, 160, 80, 210, 130);
+    }
+    else if (b == 4) {
+        drawS(160,80);
+    }
+    else if (b == 5) {
+        drawPent(185,160,170,200,210,185,80,100,130);
+    }
+    else if (b == 6) {
+        drawHex(165,80);
+    }
+    else if (b == 7) {
+        drawHepta(120,0);
     }
     if (c == 2) {
-        ctx.moveTo(280, 80);
-        ctx.lineTo(330, 130);
-        ctx.moveTo(280, 130);
-        ctx.lineTo(330, 80);
+        drawX(280,80,330,130);
+    }
+    else if (c == 3) {
+        drawT(305,80,330,130,280);
+    }
+    else if (c == 0) {
+        graphicCircle(305, 105, 25, false, 280, 80, 330, 130);
+    }
+    else if (c == 4) {
+        drawS(280,80);
+    }
+    else if (c == 5) {
+        drawPent(305,280,290,320,330,305,80,100,130);
+    }
+    else if (c == 6) {
+        drawHex(285,80);
+    }
+    else if (c == 7) {
+        drawHepta(240,0);
     }
     if (d == 2) {
-        ctx.moveTo(40, 200);
-        ctx.lineTo(90, 250);
-        ctx.moveTo(40, 250);
-        ctx.lineTo(90, 200);
+        drawX(40,200,90,250);
+    }
+    else if (d == 3) {
+        drawT(65,200,90,250,40);
+    }
+    else if (d == 0) {
+        graphicCircle(65, 225, 25, false, 40, 200, 90, 250);
+    }
+    else if (d == 4) {
+        drawS(40,200);
+    }
+    else if (d == 5) {
+        drawPent(65,40,50,80,90,65,200,220,250);
+    }
+    else if (d == 6) {
+        drawHex(45,200);
+    }
+    else if (d == 7) {
+        drawHepta(0,120);
     }
     if (e == 2) {
-        ctx.moveTo(160, 200);
-        ctx.lineTo(210, 250);
-        ctx.moveTo(160, 250);
-        ctx.lineTo(210, 200);
+        drawX(160,200,210,250);
+    }
+    else if (e == 3) {
+        drawT(185,200,210,250,160);
+    }
+    else if (e == 0) {
+        graphicCircle(185, 225, 25, false, 160, 200, 210, 250);
+    }
+    else if (e == 4) {
+        drawS(160,200);
+    }
+    else if (e == 5) {
+        drawPent(185,160,170,200,210,185,200,220,250);
+    }
+    else if (e == 7) {
+        drawHepta(120,120);
+    }
+    else if (e == 6) {
+        drawHex(165,200);
     }
     if (f == 2) {
-        ctx.moveTo(280, 200);
-        ctx.lineTo(330, 250);
-        ctx.moveTo(280, 250);
-        ctx.lineTo(330, 200);
+        drawX(280,200,330,250);
+    }
+    else if (f == 3) {
+        drawT(305,200,330,250,280);
+    }
+    else if (f == 0) {
+        graphicCircle(305, 225, 25, false, 280, 200, 330, 250);
+    }
+    else if (f == 4) {
+        drawS(280,200);
+    }
+    else if (f == 5) {
+        drawPent(305,280,290,320,330,305,200,220,250);
+    }
+    else if (f == 6) {
+        drawHex(285,200);
+    }
+    else if (f == 7) {
+        drawHepta(240,120);
     }
     if (g == 2) {
-        ctx.moveTo(40, 320);
-        ctx.lineTo(90, 370);
-        ctx.moveTo(40, 370);
-        ctx.lineTo(90, 320);
+        drawX(40,320,90,370);
+    }
+    else if (g == 3) {
+        drawT(65,320,90,370,40);
+    }
+    else if (g == 0) {
+        graphicCircle(65, 345, 25, false, 40, 320, 90, 370);
+    }
+    else if (g == 4) {
+        drawS(40,320);
+    }
+    else if (g == 5) {
+        drawPent(65,40,50,80,90,65,320,340,370);
+    }
+    else if (g == 6) {
+        drawHex(45,320);
+    }
+    else if (g == 7) {
+        drawHepta(0,240);
     }
     if (h == 2) {
-        ctx.moveTo(160, 320);
-        ctx.lineTo(210, 370);
-        ctx.moveTo(160, 370);
-        ctx.lineTo(210, 320);
+        drawX(160,320,210,370);
+    }
+    else if (h == 3) {
+        drawT(185,320,210,370,160);
+    }
+    else if (h == 0) {
+        graphicCircle(185, 345, 25, false, 160, 320, 210, 370);
+    }
+    else if (h == 4) {
+        drawS(160,320);
+    }
+    else if (h == 5) {
+        drawPent(185,160,170,200,210,185,320,340,370);
+    }
+    else if (h == 6) {
+        drawHex(165,320);
+    }
+    else if (h == 7) {
+        drawHepta(120,240);
     }
     if (i == 2) {
-        ctx.moveTo(280, 320);
-        ctx.lineTo(330, 370);
-        ctx.moveTo(280, 370);
-        ctx.lineTo(330, 320);
+        drawX(280,320,330,370);
+    }
+    else if (i == 3) {
+        drawT(305,320,330,370,280);
+    }
+    else if (i == 0) {
+        graphicCircle(305, 345, 25, false, 280, 320, 330, 370);
+    }
+    else if (i == 4) {
+        drawS(280,320);
+    }
+    else if (i == 5) {
+        drawPent(305,280,290,320,330,305,320,340,370);
+    }
+    else if (i == 6) {
+        drawHex(285,320);
+    }
+    else if (i == 7) {
+        drawHepta(240,240);
+    }
+    ctx.stroke();
+    locateOverlap();
+}
+var drawRelevel = function () {
+    if (randomCounter == 1) {
+        ctx.fillStyle="dimgray";
+        ctx.strokeStyle = "dimgray";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(10,40);
+        ctx.lineTo(10,10);
+        ctx.lineTo(50,10);
+        ctx.moveTo(40, 0);
+        ctx.lineTo(50,10);
+        ctx.lineTo(40,20);
+        ctx.moveTo(50,20);
+        ctx.lineTo(50,50);
+        ctx.lineTo(10,50);
+        ctx.moveTo(20,40);
+        ctx.lineTo(10,50);
+        ctx.lineTo(20,60);
+        ctx.stroke();
+    }
+}
+var drawInfo = function () {
+    ctx.fillStyle="dimgray";
+    ctx.strokeStyle = "dimgray";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.font = '30pt Calibri';
+    posX = 315;
+    posY = 43;
+    textValue = "i";
+    ctx.fillText(textValue, posX, posY);
+    circle(320, 30, 20, false);
+}
+var createWin = function () {
+    win = [];
+    for (x = 0; x < one; x++) {
+        win.push(1)
+    }
+    for (x = 0; x < two; x++) {
+        win.push(2)
+    }
+    for (x = 0; x < three; x++) {
+        win.push(3)
+    }
+    for (x = 0; x < four; x++) {
+        win.push(4)
+    }
+    for (x = 0; x < five; x++) {
+        win.push(5)
+    }
+    for (x = 0; x < six; x++) {
+        win.push(6)
+    }
+    for (x = 0; x < seven; x++) {
+        win.push(7)
+    }
+    for (x = 0; x < eight; x++) {
+        win.push(8)
+    }
+    for (x = 0; x < nine; x++) {
+        win.push(9)
+    }
+}
+var textValue;
+var randomCounter = 0;
+var drawText = function () {
+    ctx.fillStyle="dimgray";
+    ctx.strokeStyle = "dimgray";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.font = '20pt Calibri';
+    posX = 145;
+    posY = 405;
+    textValue = "Level " + (Number(localStorage.level) + randomCounter);
+    ctx.fillText(textValue, posX, posY);
+    posX = 10;
+    posY = 435;
+    ctx.font = '15pt Calibri';
+    if (randomCounter == 1) {
+        textValue = "You got to the end!!!! You are victorious!";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "But, the fun is not over! Play infinite";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "levels here! They are randomly";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "generated. In case of an impossible";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "generate, hit the icon in the top left,";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "the one with arrows and a square.";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+    }
+    else if (Number(localStorage.level) == 1) {
+        textValue = "Welcome to Abox! To get started, swipe";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "around the screen. You should notice";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "symbol appearing on squares you have";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "hopped on (you are the blue dot).";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Try getting that symbol on every square";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "without touching a square you had";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "already hopped on.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 2) {
+        textValue = "Good job! Now, you see that X symbol?";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Don't be afraid, try hopping on it. If you";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "did, you saw that it turned into a normal";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "space. Per round, hit that X two times";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "instead of once!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 3) {
+        textValue = "Getting the hang of it...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 4) {
+        textValue = "More Xs...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 5) {
+        textValue = "Gah! A triangle! Just hop on it three";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "times.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 6) {
+        textValue = "More triangles!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 7) {
+        textValue = "You're welcome. I've completed some";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "squares for you already.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 8) {
+        textValue = "I think completing squares ahead of";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "time only making things harder...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 9) {
+        textValue = "Tricky, tricky!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 10) {
+        textValue = "You know the drill! Square needs 4 times!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 11) {
+        textValue = "Practice, practice!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 12) {
+        textValue = "Is there anything possibly worse";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "than squares!?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 13) {
+        textValue = "Oh yes, hit that pentagon 5 times!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 14) {
+        textValue = "Look at that pentagon in the corner! :)";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 15) {
+        textValue = "5 features... one level...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 16) {
+        textValue = "Oh no...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 17) {
+        textValue = "It's here...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 18) {
+        textValue = "Go quick, this mysterious thing has";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "tricks up its sleeve...";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Remember: clocks time you!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 20) {
+        textValue = "Good, you are back. That thing was not";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "able to defeat you. That clock ticks";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "fast!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 21) {
+        textValue = "Hexagon = 6 times!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 23) {
+        textValue = "That sneaky thing! It's here somewhere...";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "taking advantages of the shapes I";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "introduce!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 24) {
+        textValue = "Heptagon = 7 times!";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "I warn you now... the... 'thing' has";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "the ability to mask the level with";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "heptagons; memorize the level before";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "it is masked by false shapes!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 25) {
+        textValue = "Memorize the level, then try to beat";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "it without knowing how many times";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "you hit a block. The value of the";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "blocks are what was before the";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "heptagons. Good luck.";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Need a paper? Get one.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 26) {
+        textValue = "You are ridiculously talented if you";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "got past that level! Just to clarify,";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "this heptagon is real, not a mask :)";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 27) {
+        textValue = "Practice, get to know heptagon.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 28) {
+        textValue = "Wow. Far in the game!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 29) {
+        textValue = "Ok. In the next level, do this:";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Avoid circles with a line through.";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "The blocks will change value.";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Survive.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 30) {
+        textValue = "Avoid circles with a line through.";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "The blocks will change value.";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Survive.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 31) {
+        textValue = "Good job.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 32) {
+        textValue = "Ready for a masking?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 33) {
+        textValue = "Masking level!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 35) {
+        textValue = "Fast fingers you got!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 36) {
+        textValue = "Many levels ahead of us...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 37) {
+        textValue = "Practice is good.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 38) {
+        textValue = "Getting pretty good!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 39) {
+        textValue = "Keep moving, go.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 40) {
+        textValue = "Level 40! Ya!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 41) {
+        textValue = "Are you ready for a bigger shape?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 42) {
+        textValue = "No bigger shape :)";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 43) {
+        textValue = "Rumble + mask = chaos.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 44) {
+        textValue = "You're back :D";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 45) {
+        textValue = "Ready for a clock?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 45) {
+        textValue = "Ready for a clock?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 47) {
+        textValue = "Nice!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 48) {
+        textValue = "Another clock?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 50) {
+        textValue = "Hmm... 1/2 way through 100";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "levels... closer, closer.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 51) {
+        textValue = "It's over 50! Wait, is that";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "not a 'thing'?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 52) {
+        textValue = "The 'thing' has been gone for";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "a while now. Odd?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 53) {
+        textValue = "Gah! Bossfight!";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "Go!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 54) {
+        textValue = "So good.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 55) {
+        textValue = "Climb higher!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 57) {
+        textValue = "That wasn't me! It was the";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "'thing'!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 58) {
+        textValue = "So tricky!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 59) {
+        textValue = "Keep tryin'!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 60) {
+        textValue = "Level 60?!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 61) {
+        textValue = "Looks like an 'A', right?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 62) {
+        textValue = "62... a while from 70.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 64) {
+        textValue = "What a clock!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 65) {
+        textValue = "Shapes o.O";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 66) {
+        textValue = "Keep moving.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 67) {
+        textValue = "Go, go, go, go!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 68) {
+        textValue = "Almost there...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 69) {
+        textValue = "Can we get to 70?";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 70) {
+        textValue = "Woah. 70.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 71) {
+        textValue = "Goal: 90. :)";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 72) {
+        textValue = "Don't ask why, just do it.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 73) {
+        textValue = "We're so close.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 74) {
+        textValue = "Just a bit farther...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 76) {
+        textValue = "That was easy! Just go!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 77) {
+        textValue = "I feel 'it', 'it' is near...!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 78) {
+        textValue = "78! We've gone so far!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 79) {
+        textValue = "Next big leap!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 80) {
+        textValue = "Finally.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 81) {
+        textValue = "I did it.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 82) {
+        textValue = "Nothing stands in the way.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 83) {
+        textValue = "We've gone through the regular blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 84) {
+        textValue = "We've gone through the X blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 85) {
+        textValue = "We've gone through the triangle blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 86) {
+        textValue = "We've gone through the square blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 87) {
+        textValue = "We've gone through the pentagon blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 88) {
+        textValue = "We've gone through the hexagon blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 89) {
+        textValue = "We've gone through the heptagon blocks.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 90) {
+        textValue = "You broke it!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 91) {
+        textValue = "You broke the gate!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 92) {
+        textValue = "The gate to infinite power!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 93) {
+        textValue = "And you did it...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 94) {
+        textValue = "Now I can finally bend shapes!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 95) {
+        textValue = "Into anything!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 96) {
+        textValue = "But first...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 97) {
+        textValue = "I must destroy you.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 98) {
+        textValue = "Prepare for the hardest bossfight...";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 99) {
+        textValue = "EVER!!!";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 100) {
+        textValue = "Lose! I am undefeatable!!!";
+        ctx.fillText(textValue, posX, posY);
+    }
+}
+var maxChars;
+var charsLeft;
+var cornerMiddleValue;
+var edgeValue;
+var checkBalance = function () {
+    cornerMiddleValue = (one + three + five + seven + nine);
+    edgeValue = (two + four + six + eight);
+}
+var randomLevel = function () {
+    charsLeft = maxChars * 9;
+    one = Math.round(Math.random() * (maxChars))
+    if (one == 0) {
+        one = 1;
+    }
+    two = Math.round(Math.random() * (maxChars))
+    three = Math.round(Math.random() * (maxChars))
+    four = Math.round(Math.random() * (maxChars))
+    five = Math.round(Math.random() * (maxChars))
+    six = Math.round(Math.random() * (maxChars))
+    seven = Math.round(Math.random() * (maxChars))
+    eight = Math.round(Math.random() * (maxChars))
+    nine = Math.round(Math.random() * (maxChars))
+    checkBalance();
+    // Check for mathematical algorithm
+    if ((!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && cornerMiddleValue > edgeValue) {
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue > edgeValue && (three > 0)); x++) {
+            three--;
+            checkBalance();
+        }
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue > edgeValue && (five > 0)); x++) {
+            five--;
+            checkBalance();
+        }
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue > edgeValue && (seven > 0)); x++) {
+            seven--;
+            checkBalance();
+        }
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue > edgeValue && (nine > 0)); x++) {
+            nine--;
+            checkBalance();
+        }
+    }
+    else if ((!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && cornerMiddleValue < edgeValue) {
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue < edgeValue && (two > 0)); x++) {
+            two--;
+            checkBalance();
+        }
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue < edgeValue && (four > 0)); x++) {
+            four--;
+            checkBalance();
+        }
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue < edgeValue && (six > 0)); x++) {
+            six--;
+            checkBalance();
+        }
+        for (x = 0; (!(cornerMiddleValue == edgeValue) && !(cornerMiddleValue - 1 == edgeValue)) && (cornerMiddleValue < edgeValue && (eight > 0)); x++) {
+            eight--;
+            checkBalance();
+        }
+    }
+    // Check for corner cutting technique
+    if (one > (two + four) / 2) {
+        if (!(two == maxChars)) {
+        two++;
+        }
+        else if (!(four == maxChars)) {
+        four++;
+        }
+        if (!(eight === 0)) {
+        eight--;
+        }
+        else if (!(six === 0)) {
+        six--;
+        }
+    }
+    if (three > (two + six) / 2) {
+        if (!(two == maxChars)) {
+        two++;
+        }
+        else if (!(six == maxChars)) {
+        six++;
+        }
+        if (!(eight === 0)) {
+        eight--;
+        }
+        else if (!(four === 0)) {
+        four--;
+        }
+    }
+    if (seven > (four + eight) / 2) {
+        if (!(four == maxChars)) {
+        four++;
+        }
+        else if (!(eight == maxChars)) {
+        eight++;
+        }
+        if (!(two === 0)) {
+        two--;
+        }
+        else if (!(six === 0)) {
+        six--;
+        }
+    }
+    if (nine > (six + eight) / 2) {
+        if (!(six == maxChars)) {
+        six++;
+        }
+        else if (!(eight == maxChars)) {
+        eight++;
+        }
+        if (!(two === 0)) {
+        four--;
+        }
+        else if (!(four === 0)) {
+        two--;
+        }
+    }
+    // Check for possibility by edge cutting method
+    if (two > (one + three + five) / 2) {
+        if (!(five == maxChars)) {
+        five++;
+        }
+        else if (!(three == maxChars)) {
+        three++;
+        }
+        if (!(seven === 0)) {
+        seven--;
+        }
+        else if (!(nine === 0)) {
+        nine--;
+        }
+    }
+    if (four > (one + five + seven) / 2) {
+        if (!(five == maxChars)) {
+        five++;
+        }
+        else if (!(seven == maxChars)) {
+        seven++;
+        }
+        if (!(three === 0)) {
+        three--;
+        }
+        else if (!(nine === 0)) {
+        nine--;
+        }
+    }
+    if (six > (nine + three + five) / 2) {
+        if (!(five == maxChars)) {
+        five++;
+        }
+        else if (!(nine == maxChars)) {
+        nine++;
+        }
+        if (!(seven === 0)) {
+        seven--;
+        }
+        else if (!(three === 0)) {
+        three--;
+        }
+    }
+    if (eight > (seven + nine + five) / 2) {
+        if (!(five == maxChars)) {
+        five++;
+        }
+        else if (!(one == maxChars)) {
+        one++;
+        }
+        if (!(seven === 0)) {
+        seven--;
+        }
+        else if (!(nine === 0)) {
+        nine--;
+        }
+    }
+    // Last check
+    if (one < 0 || two < 0 || three < 0 || four < 0 || five < 0 || six < 0 || seven < 0 || eight < 0 || nine < 0) {
+        if (one < 1) {
+            one++;
+        }
+        if (two < 0) {
+            two++;
+        }
+        if (three < 0) {
+            three++;
+        }
+        if (four < 0) {
+            four++;
+        }
+        if (five < 0) {
+            five++;
+        }
+        if (six < 0) {
+            six++;
+        }
+        if (seven < 0) {
+            seven++;
+        }
+        if (eight < 0) {
+            eight++;
+        }
+        if (nine < 0) {
+            nine++;
+        }
+    }
+    createWin();
+}
+var locateOverlap = function () {
+    // Second locate overlap
+    ctx.fillStyle="lightblue";
+    ctx.strokeStyle = "Gray";
+    if (locate == 1) {
+    circle(65, 105, 10, true);
+    }
+    else if (locate == 2) {
+    circle(185, 105, 10, true);
+    }
+    else if (locate == 3) {
+    circle(305, 105, 10, true);
+    }
+    else if (locate == 4) {
+    circle(65, 225, 10, true);
+    }
+    else if (locate == 5) {
+    circle(185, 225, 10, true);
+    }
+    else if (locate == 6) {
+    circle(305, 225, 10, true);
+    }
+    else if (locate == 7) {
+    circle(65, 345, 10, true);
+    }
+    else if (locate == 8) {
+    circle(185, 345, 10, true);
+    }
+    else if (locate == 9) {
+    circle(305, 345, 10, true);
     }
     ctx.stroke();
 }
-var drawLevel = function(a, b, c, d, e, f, g, h, i) {
+var timeLeft;
+var timerId;
+var timeOn = false;
+var timedChallenge = function () {
+    timeLeft = 20;
+    timeOn = true;
+    countdown();
+    timerId = setInterval(countdown, 1000);
+    }
+function countdown() {
+  if (timeLeft == 0) {
+    clearTimeout(timerId);
+    activate = 0;
+    checkLevel();
+  } else {
+    drawClock(timeLeft);
+    timeLeft--;
+  }
+}
+var posX;
+var stopOverlap = 0;
+var posY;
+var drawClock = function (a) {
+    stopOverlap = 1;
+    drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    stopOverlap = 0;
+    ctx.fillStyle="dimgray";
+    ctx.strokeStyle = "dimgray";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    if (a > 9) {
+    posX = 170;
+    }
+    else {
+    posX = 176;
+    }
+    posY = 448;
+    ctx.font = '20pt Calibri';
+    ctx.fillStyle = 'dimgray';
+    ctx.fillText(a, posX, posY);
+    circle(185, 440, 30, false);
+}
+var oneA;
+var twoA;
+var threeA;
+var fourA;
+var fiveA;
+var sixA;
+var sevenA;
+var eightA;
+var nineA;
+var transferN = function () {
+    oneA = one;
+    twoA = two;
+    threeA = three;
+    fourA = four;
+    fiveA = five;
+    sixA = six;
+    sevenA = seven;
+    eightA = eight;
+    nineA = nine;
+    if (activate == 0) {
+        activate = 1
+        oneA--;
+    }
+}
+var drawLevel = function() {
+    transferN();
     locate = 1;
     listLoc = [];
     listLoc = [1];
-    drawContents(a, b, c, d, e, f, g, h, i);
+    if (moveGo) {
+    beginMovement();
+    }
+    if (maskGo) {
+    beginMask();
+    }
+    locatePlayer();
+    drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
 };
+var reduceValue = function() {
+    if (!(moveGo)) {
+    if (locate == 1) {
+        oneA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 2) {
+        twoA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 3) {
+        threeA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 4) {
+        fourA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 5) {
+        fiveA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 6) {
+        sixA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 7) {
+        sevenA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 8) {
+        eightA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    else if (locate == 9) {
+        nineA--;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+    }
+    else {
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
+}
+var waitForMask;
+var beginMask = function () {
+    waitForMask = setTimeout("heptaMask()", 5000);
+}
+var heptaMask = function () {
+    oneA = 7;
+    twoA = 7;
+    threeA = 7;
+    fourA = 7;
+    fiveA = 7;
+    sixA = 7;
+    sevenA = 7;
+    eightA = 7;
+    nineA = 7;
+    drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+}
+var setAllVars = function (a,b,c,d,e,f,g,h,i) {
+    one = a;
+    two = b;
+    three = c;
+    four = d;
+    five = e;
+    six = f;
+    seven = g;
+    eight = h;
+    nine = i;
+}
+var moveGo;
+var bossGo;
+var maskGo;
+var moveValid = true;
 var checkLevel = function() {
 localStorage.level;
 if(!(localStorage.level)) {
     localStorage.level = 1;
 }
+clearTimeout(timerId);
+maxLevel = 100;
+win = [];
+clearInterval(timerId);
+maxChars = 7;
+bossGo = false;
+maskGo = false;
+beginRumble = false;
+moveGo = false;
+timeOn = false;
+rumble = 0;
 if (Number(localStorage.level) == 1) {
-    one = 1;
-    two = 1;
-    three = 2;
-    four = 1;
-    five = 1;
-    six = 1;
-    seven = 1;
-    eight = 1;
-    nine = 1;
+    setAllVars(1,1,1,1,1,1,1,1,1);
+    createWin();
 }
-drawLevel(one, two, three, four, five, six, seven, eight, nine);
+if (Number(localStorage.level) == 2) {
+    setAllVars(1,1,1,2,1,1,1,1,1);
+    createWin();
+}
+if (Number(localStorage.level) == 3) {
+    setAllVars(1,1,1,2,2,2,1,1,1);
+    createWin();
+}
+if (Number(localStorage.level) == 4) {
+    setAllVars(1,1,1,2,1,2,2,2,2);
+    createWin();
+}
+if (Number(localStorage.level) == 5) {
+    setAllVars(1,1,1,2,3,2,1,2,1);
+    createWin();
+}
+if (Number(localStorage.level) == 6) {
+    setAllVars(1,2,2,2,3,2,2,2,1);
+    createWin();
+}
+if (Number(localStorage.level) == 7) {
+    setAllVars(2,2,2,1,0,1,1,1,0);
+    createWin();
+}
+if (Number(localStorage.level) == 8) {
+    setAllVars(1,0,0,2,3,2,0,0,0);
+    createWin();
+}
+if (Number(localStorage.level) == 9) {
+    setAllVars(1,1,0,2,1,2,2,1,3);
+    createWin();
+}
+if (Number(localStorage.level) == 10) {
+    setAllVars(1,2,1,2,4,2,1,2,1);
+    createWin();
+}
+if (Number(localStorage.level) == 11) {
+    setAllVars(2,1,0,2,3,2,2,4,3);
+    createWin();
+}
+if (Number(localStorage.level) == 12) {
+    setAllVars(2,3,0,1,4,2,3,2,0);
+    createWin();
+}
+if (Number(localStorage.level) == 13) {
+    setAllVars(3,1,2,5,5,5,2,4,3);
+    createWin();
+}
+if (Number(localStorage.level) == 14) {
+    setAllVars(5,4,0,2,1,3,1,3,5);
+    createWin();
+}
+if (Number(localStorage.level) == 15) {
+    setAllVars(1,1,0,1,2,5,3,4,5);
+    createWin();
+}
+if (Number(localStorage.level) == 16) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 17) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 18) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 19) {
+    setAllVars(5,5,4,5,3,5,5,5,3);
+    createWin();
+    clearRumble();
+    bossGo = true;
+}
+if (Number(localStorage.level) == 20) {
+    setAllVars(2,3,3,1,0,2,0,3,4);
+    createWin();
+}
+if (Number(localStorage.level) == 21) {
+    setAllVars(6,6,6,4,0,5,6,3,0);
+    createWin();
+}
+if (Number(localStorage.level) == 22) {
+    setAllVars(6,6,6,6,0,6,6,6,6);
+    createWin();
+    bossGo = true;
+}
+if (Number(localStorage.level) == 23) {
+    setAllVars(4,3,2,3,1,3,0,4,6);
+    createWin();
+}
+if (Number(localStorage.level) == 24) {
+    setAllVars(2,3,1,3,7,3,1,3,1);
+    showInfo = 1;
+    createWin();
+}
+if (Number(localStorage.level) == 25) {
+    setAllVars(2,3,2,3,3,3,2,3,3);
+    showInfo = 1;
+    maskGo = true;
+    createWin();
+}
+if (Number(localStorage.level) == 26) {
+    setAllVars(6,7,1,2,1,3,4,4,4);
+    createWin();
+}
+if (Number(localStorage.level) == 27) {
+    setAllVars(1,4,2,6,5,2,6,7,6);
+    createWin();
+}
+if (Number(localStorage.level) == 28) {
+    setAllVars(1,2,6,6,2,7,5,5,6);
+    createWin();
+}
+if (Number(localStorage.level) == 29) {
+    setAllVars(1,4,0,2,5,3,2,5,6);
+    createWin();
+}
+if (Number(localStorage.level) == 30) {
+    clearEffects();
+    setAllVars(1,1,0,1,1,1,0,1,1);
+    moveGo = true;
+}
+if (Number(localStorage.level) == 31) {
+    activate = 0;
+    clearEffects();
+    setAllVars(7,7,5,3,3,4,0,0,0);
+    createWin();
+}
+if (Number(localStorage.level) == 32) {
+    setAllVars(7,7,0,1,1,0,2,3,2);
+    createWin();
+}
+if (Number(localStorage.level) == 33) {
+    setAllVars(7,7,7,7,0,7,7,7,7);
+    maskGo = true;
+    createWin();
+}
+if (Number(localStorage.level) == 34) {
+    setAllVars(7,7,7,7,0,7,7,7,7);
+    bossGo = true;
+    createWin();
+}
+if (Number(localStorage.level) == 35) {
+    setAllVars(2,4,2,4,7,4,2,3,2);
+    createWin();
+}
+if (Number(localStorage.level) == 36) {
+    setAllVars(6,2,0,4,1,1,0,0,1);
+    createWin();
+}
+if (Number(localStorage.level) == 37) {
+    setAllVars(1,0,0,1,5,3,1,2,0);
+    createWin();
+}
+if (Number(localStorage.level) == 38) {
+    setAllVars(1,0,0,4,5,0,6,7,0);
+    createWin();
+}
+if (Number(localStorage.level) == 39) {
+    setAllVars(7,7,7,1,0,6,4,4,0);
+    createWin();
+}
+if (Number(localStorage.level) == 40) {
+    setAllVars(6,2,2,7,3,7,6,3,2);
+    createWin();
+}
+if (Number(localStorage.level) == 41) {
+    setAllVars(5,3,2,2,4,3,0,3,1);
+    createWin();
+}
+if (Number(localStorage.level) == 42) {
+    setAllVars(1,4,0,2,4,4,3,1,4);
+    createWin();
+}
+if (Number(localStorage.level) == 43) {
+    setAllVars(2,5,3,0,1,0,3,5,2);
+    maskGo = true;
+    beginRumble = true;
+    createWin();
+}
+if (Number(localStorage.level) == 44) {
+    setAllVars(2,2,1,3,7,4,1,2,1);
+    createWin();
+}
+if (Number(localStorage.level) == 45) {
+    setAllVars(6,6,1,2,4,5,3,1,1);
+    createWin();
+}
+if (Number(localStorage.level) == 46) {
+    setAllVars(2,7,4,3,6,4,4,6,5);
+    bossGo = true;
+    createWin();
+}
+if (Number(localStorage.level) == 47) {
+    setAllVars(7,4,5,4,1,4,3,4,1);
+    createWin();
+}
+if (Number(localStorage.level) == 48) {
+    setAllVars(7,7,1,2,2,2,0,3,5);
+    createWin();
+}
+if (Number(localStorage.level) == 49) {
+    bossGo = true;
+    setAllVars(1,2,1,0,1,0,3,7,3);
+    createWin();
+}
+if (Number(localStorage.level) == 50) {
+    beginRumble = true;
+    setAllVars(1,1,6,0,1,6,1,3,1);
+    createWin();
+}
+if (Number(localStorage.level) == 51) {
+    setAllVars(1,6,4,1,7,7,1,4,6);
+    createWin();
+}
+if (Number(localStorage.level) == 52) {
+    setAllVars(1,1,3,1,0,2,5,7,3);
+    createWin();
+}
+if (Number(localStorage.level) == 53) {
+    setAllVars(1,1,1,1,1,1,1,1,1);
+    moveGo = true;
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 54) {
+    activate = 0;
+    setAllVars(1,1,1,1,0,6,6,5,6);
+    createWin();
+}
+if (Number(localStorage.level) == 55) {
+    setAllVars(2,7,7,6,5,1,0,0,0);
+    createWin();
+}
+if (Number(localStorage.level) == 56) {
+    bossGo = true;
+    setAllVars(7,6,2,1,2,3,0,0,0);
+    createWin();
+}
+if (Number(localStorage.level) == 57) {
+    setAllVars(1,4,7,4,4,7,7,7,4);
+    createWin();
+}
+if (Number(localStorage.level) == 58) {
+    setAllVars(3,4,5,5,4,3,3,7,4);
+    createWin();
+}
+if (Number(localStorage.level) == 59) {
+    setAllVars(5,6,7,7,6,5,1,2,1);
+    createWin();
+}
+if (Number(localStorage.level) == 60) {
+    setAllVars(1,2,3,3,2,1,3,5,3);
+    createWin();
+}
+if (Number(localStorage.level) == 61) {
+    setAllVars(1,7,1,7,6,7,7,1,7);
+    createWin();
+}
+if (Number(localStorage.level) == 62) {
+    setAllVars(2,3,2,3,5,3,2,3,2);
+    createWin();
+}
+if (Number(localStorage.level) == 63) {
+    bossGo = true;
+    setAllVars(7,7,3,2,2,6,1,2,5);
+    createWin();
+}
+if (Number(localStorage.level) == 64) {
+    setAllVars(5,6,5,6,4,6,5,6,5);
+    createWin();
+}
+if (Number(localStorage.level) == 65) {
+    setAllVars(2,5,5,6,7,6,3,6,6);
+    createWin();
+}
+if (Number(localStorage.level) == 66) {
+    setAllVars(5,6,7,7,6,5,3,7,4);
+    createWin();
+}
+if (Number(localStorage.level) == 67) {
+    setAllVars(5,7,3,1,0,3,5,5,3);
+    createWin();
+}
+if (Number(localStorage.level) == 68) {
+    setAllVars(6,7,6,3,1,4,4,5,3);
+    createWin();
+}
+if (Number(localStorage.level) == 69) {
+    beginRumble = true;
+    setAllVars(3,3,0,4,5,0,0,7,6);
+    createWin();
+}
+if (Number(localStorage.level) == 70) {
+    clearRumble();
+    beginRumble = true;
+    setAllVars(7,1,0,6,1,7,4,4,7);
+    createWin();
+}
+if (Number(localStorage.level) == 71) {
+    setAllVars(7,4,3,7,2,7,3,4,7);
+    createWin();
+}
+if (Number(localStorage.level) == 72) {
+    setAllVars(5,5,6,5,1,6,5,6,6);
+    createWin();
+}
+if (Number(localStorage.level) == 73) {
+    setAllVars(2,5,5,1,0,1,5,5,1);
+    createWin();
+}
+if (Number(localStorage.level) == 74) {
+    setAllVars(1,4,7,3,0,3,4,5,4);
+    createWin();
+}
+if (Number(localStorage.level) == 75) {
+    setAllVars(2,0,0,7,7,7,5,5,5);
+    bossGo = true;
+    createWin();
+}
+if (Number(localStorage.level) == 76) {
+    setAllVars(5,5,7,5,0,5,5,2,0);
+    createWin();
+}
+if (Number(localStorage.level) == 77) {
+    setAllVars(6,7,6,7,4,7,6,7,6);
+    createWin();
+}
+if (Number(localStorage.level) == 78) {
+    setAllVars(7,7,6,6,1,6,6,7,7);
+    createWin();
+}
+if (Number(localStorage.level) == 79) {
+    setAllVars(4,2,2,7,7,7,2,2,4);
+    createWin();
+}
+if (Number(localStorage.level) == 80) {
+    setAllVars(7,6,7,2,0,6,1,2,1);
+    createWin();
+}
+if (Number(localStorage.level) == 81) {
+    setAllVars(1,2,1,2,5,2,3,7,3);
+    createWin();
+}
+if (Number(localStorage.level) == 82) {
+    setAllVars(6,7,7,7,7,6,1,7,7);
+    createWin();
+}
+if (Number(localStorage.level) == 83) {
+    setAllVars(1,1,1,1,0,1,1,1,1);
+    createWin();
+}
+if (Number(localStorage.level) == 84) {
+    setAllVars(2,2,2,2,0,2,2,2,2);
+    createWin();
+}
+if (Number(localStorage.level) == 85) {
+    setAllVars(3,3,3,3,0,3,3,3,3);
+    createWin();
+}
+if (Number(localStorage.level) == 86) {
+    setAllVars(4,4,4,4,0,4,4,4,4);
+    createWin();
+}
+if (Number(localStorage.level) == 87) {
+    setAllVars(5,5,5,5,0,5,5,5,5);
+    createWin();
+}
+if (Number(localStorage.level) == 88) {
+    setAllVars(6,6,6,6,0,6,6,6,6);
+    createWin();
+}
+if (Number(localStorage.level) == 89) {
+    setAllVars(7,7,7,7,0,7,7,7,7);
+    createWin();
+}
+if (Number(localStorage.level) == 90) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 91) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 92) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 93) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 94) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 95) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 96) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 97) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 98) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 99) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 100) {
+    setAllVars(1,1,1,1,1,1,1,1,1);
+    clearRumble();
+    beginRumble = true;
+    moveGo = true;
+}
+if (Number(localStorage.level) > maxLevel + 1) {
+    localStorage.level = maxLevel;
+    randomCounter = 1;
+    randomLevel();
+}
+else if (Number(localStorage.level) == maxLevel + 1) {
+    localStorage.level = maxLevel;
+    randomCounter = 1;
+    randomLevel();
+}
+drawLevel();
+if (beginRumble) {
+    showInfo = 1;
+    rumbleEffect();
+}
+if (maskGo) {
+    beginMask();
+}
+if (bossGo) {
+    timedChallenge();
+}
+if (moveGo) {
+    beginMovement();
+}
 };
+var clearEffects = function () {
+    clearTimeout(mTa);
+    clearTimeout(mTb);
+    clearTimeout(mTc);
+    clearTimeout(mTd);
+    clearTimeout(mTe);
+    clearTimeout(mTf);
+    clearTimeout(mTg);
+    clearTimeout(mTh);
+    clearTimeout(mTi);
+    clearTimeout(mTj);
+    clearTimeout(mTk);
+    clearTimeout(mTl);
+    clearTimeout(mTm);
+    clearTimeout(mTn);
+    clearTimeout(mTo);
+    clearTimeout(mTp);
+    clearTimeout(mTq);
+    clearTimeout(mTr);
+    clearTimeout(mTs);
+    clearTimeout(mTt);
+    clearTimeout(mTu);
+    clearTimeout(mTv);
+    clearTimeout(mTw);
+    clearTimeout(mTx);
+    clearTimeout(mTy);
+    clearTimeout(mTz);
+    clearTimeout(mTaa);
+    clearTimeout(mTba);
+    clearTimeout(mTca);
+    clearTimeout(mTda);
+    clearTimeout(mTea);
+    clearTimeout(mTfa);
+    clearTimeout(mTga);
+    clearTimeout(mTha);
+    clearTimeout(mTia);
+    clearTimeout(mTja);
+    clearTimeout(mTka);
+    clearTimeout(mTla);
+    clearTimeout(mTma);
+    clearTimeout(mTna);
+    clearTimeout(mToa);
+    clearTimeout(mTpa);
+    clearTimeout(mTqa);
+    clearTimeout(mTra);
+    clearTimeout(mTsa);
+    clearTimeout(mTta);
+    clearTimeout(mTua);
+    clearTimeout(mTva);
+    clearTimeout(mTwa);
+    clearTimeout(mTxa);
+    clearTimeout(mTya);
+    clearTimeout(mTza);
+    clearTimeout(mTab);
+    clearTimeout(mTbb);
+    clearTimeout(mTcb);
+    clearTimeout(mTdb);
+    clearTimeout(mTeb);
+    clearTimeout(mTfb);
+    clearTimeout(mTgb);
+    clearTimeout(mThb);
+    clearTimeout(mTib);
+    clearTimeout(mTjb);
+    clearTimeout(mTkb);
+    clearTimeout(mTlb);
+    clearTimeout(mTmb);
+    clearTimeout(mTnb);
+    clearTimeout(mTob);
+    clearTimeout(mTpb);
+    clearTimeout(mTqb);
+    clearTimeout(mTrb);
+    clearTimeout(mTsb);
+    clearTimeout(mTtb);
+    clearTimeout(mTub);
+    clearTimeout(mTvb);
+    clearTimeout(mTwb);
+    clearTimeout(mTxb);
+    clearTimeout(mTyb);
+    clearTimeout(mTzb);
+}
+var mTa;
+var mTb;
+var mTc;
+var mTd;
+var mTe;
+var mTf;
+var mTg;
+var mTh;
+var mTi;
+var mTj;
+var mTk;
+var mTl;
+var mTm;
+var mTn;
+var mTo;
+var mTp;
+var mTq;
+var mTr;
+var mTs;
+var mTt;
+var mTu;
+var mTv;
+var mTw;
+var mTx;
+var mTy;
+var mTz;
+var mTaa;
+var mTba;
+var mTca;
+var mTda;
+var mTea;
+var mTfa;
+var mTga;
+var mTha;
+var mTia;
+var mTja;
+var mTka;
+var mTla;
+var mTma;
+var mTna;
+var mToa;
+var mTpa;
+var mTqa;
+var mTra;
+var mTsa;
+var mTta;
+var mTua;
+var mTva;
+var mTwa;
+var mTxa;
+var mTya;
+var mTza;
+var mTab;
+var mTbb;
+var mTcb;
+var mTdb;
+var mTeb;
+var mTfb;
+var mTgb;
+var mThb;
+var mTib;
+var mTjb;
+var mTkb;
+var mTlb;
+var mTmb;
+var mTnb;
+var mTob;
+var mTpb;
+var mTqb;
+var mTrb;
+var mTsb;
+var mTtb;
+var mTub;
+var mTvb;
+var mTwb;
+var mTxb;
+var mTyb;
+var mTzb;
+var beginMovement = function () {
+    clearEffects();
+    if (Number(localStorage.level) == 30) {
+    mTa = setTimeout("moveEffects(1,1,0,1,1,1,0,1,1)", 0);
+    mTa = setTimeout("moveEffects(1,0,1,1,1,1,1,0,1)", 1000);
+    mTb = setTimeout("moveEffects(0,1,1,1,1,1,1,1,0)", 2000);
+    mTc = setTimeout("moveEffects(1,1,1,0,1,0,1,1,1)", 3000);
+    mTd = setTimeout("moveEffects(1,1,1,1,0,1,1,1,1)", 4000);
+    mTe = setTimeout("moveEffects(1,0,1,1,1,1,1,0,1)", 5000);
+    mTf = setTimeout("moveEffects(4,1,4,4,4,1,1,4,1)", 6000);
+    mTg = setTimeout("moveEffects(3,1,3,3,3,1,1,3,1)", 6500);
+    mTh = setTimeout("moveEffects(2,1,2,2,2,1,1,2,1)", 6750);
+    mTi = setTimeout("moveEffects(0,1,0,0,0,1,1,0,1)", 7000);
+    mTj = setTimeout("moveEffects(1,4,1,1,1,4,4,1,4)", 8000);
+    mTk = setTimeout("moveEffects(1,3,1,1,1,3,3,1,3)", 8500);
+    mTl = setTimeout("moveEffects(1,2,1,1,1,2,2,1,2)", 8750);
+    mTm = setTimeout("moveEffects(1,0,1,1,1,0,0,1,0)", 9000);
+    mTn = setTimeout("moveComplete()", 10000);
+    }
+    if (Number(localStorage.level) == 53) {
+        mTa = setTimeout("moveEffects(1,1,1,1,1,1,1,1,1)", 0);
+        mTa = setTimeout("moveEffects(1,4,1,1,1,1,1,1,1)", 1000);
+        mTb = setTimeout("moveEffects(1,3,1,1,1,4,1,1,1)", 1500);
+        mTc = setTimeout("moveEffects(1,2,1,1,1,4,1,1,1)", 1750);
+        mTd = setTimeout("moveEffects(1,0,1,4,1,3,1,1,1)", 2000);
+        mTe = setTimeout("moveEffects(1,0,1,4,1,2,1,1,1)", 2250);
+        mTf = setTimeout("moveEffects(1,0,1,3,1,0,1,4,1)", 2500);
+        mTg = setTimeout("moveEffects(1,0,1,2,1,0,1,4,1)", 2750);
+        mTh = setTimeout("moveEffects(1,1,1,0,1,0,1,3,1)", 3000);
+        mTi = setTimeout("moveEffects(4,1,1,0,1,0,1,2,1)", 3250);
+        mTj = setTimeout("moveEffects(4,1,1,0,1,1,1,0,1)", 3500);
+        mTk = setTimeout("moveEffects(3,1,1,1,1,1,1,0,1)", 3750);
+        mTl = setTimeout("moveEffects(2,1,1,1,1,1,1,0,1)", 4000);
+        mTm = setTimeout("moveEffects(0,1,1,1,1,1,1,1,1)", 4250);
+        mTn = setTimeout("moveComplete()", 5000);
+    }
+    if (Number(localStorage.level) == 100) {
+    mTa = setTimeout("moveEffects(1,1,1,1,1,1,1,1,1)", 0);
+    mTa = setTimeout("moveEffects(7,7,7,7,7,7,7,7,7)", 1000);
+    mTb = setTimeout("moveEffects(6,6,6,6,6,6,6,6,6)", 1500);
+    mTc = setTimeout("moveEffects(5,5,5,5,5,5,5,5,5)", 1750);
+    mTd = setTimeout("moveEffects(4,4,4,4,4,4,4,4,4)", 1870);
+    mTe = setTimeout("moveEffects(3,3,3,3,5,3,3,3,3)", 2000);
+    mTf = setTimeout("moveEffects(2,2,2,2,6,2,2,2,2)", 2120);
+    mTg = setTimeout("moveEffects(0,0,0,0,7,0,0,0,0)", 2250);
+    mTh = setTimeout("moveEffects(0,0,0,0,6,0,0,0,0)", 2750);
+    mTi = setTimeout("moveEffects(0,0,0,0,5,0,0,0,0)", 3000);
+    mTj = setTimeout("moveEffects(0,0,0,0,4,0,0,0,0)", 3250);
+    mTk = setTimeout("moveEffects(0,1,0,1,3,1,0,1,0)", 3500);
+    mTl = setTimeout("moveEffects(0,1,0,1,2,1,0,1,0)", 3750);
+    mTm = setTimeout("moveEffects(0,1,0,1,0,1,0,1,0)", 4000);
+    mTn = setTimeout("moveEffects(1,2,1,2,1,2,1,2,1)", 4500);
+    mTo = setTimeout("moveEffects(1,0,1,0,1,0,1,0,1)", 5500);
+    mTp = setTimeout("moveEffects(2,1,2,1,2,1,2,1,2)", 6000);
+    mTq = setTimeout("moveEffects(0,1,0,1,0,1,0,1,0)", 7000);
+    mTr = setTimeout("moveEffects(2,1,1,1,1,2,2,1,1)", 7500);
+    mTs = setTimeout("moveEffects(0,2,1,1,2,0,0,2,1)", 8500);
+    mTt = setTimeout("moveEffects(1,0,2,2,0,1,1,0,2)", 9000);
+    mTu = setTimeout("moveEffects(1,1,0,0,1,1,1,1,0)", 9500);
+    mTv = setTimeout("moveEffects(2,1,1,1,1,2,2,1,1)", 10000);
+    mTw = setTimeout("moveEffects(0,2,1,1,2,0,0,2,1)", 10500);
+    mTx = setTimeout("moveEffects(1,0,2,2,0,1,1,0,2)", 11000);
+    mTy = setTimeout("moveEffects(1,1,0,0,1,1,1,1,0)", 11500);
+    mTz = setTimeout("moveEffects(2,2,2,2,1,2,2,2,2)", 12500);
+    mTaa = setTimeout("moveEffects(2,0,2,0,1,0,2,0,2)", 13250);
+    mTba = setTimeout("moveEffects(0,1,0,1,2,1,0,1,0)", 13750);
+    mTca = setTimeout("moveEffects(1,1,1,1,0,1,1,1,1)", 14250);
+    mTda = setTimeout("moveEffects(3,2,2,2,2,2,2,2,2)", 15000);
+    mTea = setTimeout("moveEffects(2,3,3,3,3,3,3,3,3)", 15250);
+    mTfa = setTimeout("moveEffects(3,2,2,2,2,2,2,2,2)", 15500);
+    mTga = setTimeout("moveEffects(0,3,3,3,3,3,3,3,3)", 16000);
+    mTha = setTimeout("moveEffects(7,7,7,7,7,7,7,7,7)", 16500);
+    mTia = setTimeout("moveEffects(6,7,7,7,7,7,7,7,7)", 17000);
+    mTja = setTimeout("moveEffects(5,6,7,7,7,7,7,7,7)", 17500);
+    mTka = setTimeout("moveEffects(4,5,6,7,7,7,7,7,7)", 18000);
+    mTla = setTimeout("moveEffects(3,4,5,6,7,7,7,7,7)", 18500);
+    mTma = setTimeout("moveEffects(2,3,4,5,6,7,7,7,7)", 19000);
+    mTna = setTimeout("moveEffects(0,2,3,4,5,6,7,7,7)", 19500);
+    mToa = setTimeout("moveEffects(7,0,2,3,4,5,6,7,7)", 20000);
+    mTpa = setTimeout("moveEffects(6,7,0,2,3,4,5,6,7)", 20500);
+    mTqa = setTimeout("moveEffects(5,6,7,0,2,3,4,5,6)", 21000);
+    mTra = setTimeout("moveEffects(4,5,6,7,0,2,3,4,5)", 21500);
+    mTsa = setTimeout("moveEffects(3,4,5,6,7,0,2,3,4)", 22000);
+    mTta = setTimeout("moveEffects(2,3,4,5,6,7,0,2,3)", 22500);
+    mTua = setTimeout("moveEffects(0,2,3,4,5,6,7,0,2)", 23000);
+    mTva = setTimeout("moveEffects(7,0,2,3,4,5,6,7,0)", 23500);
+    mTwa = setTimeout("moveEffects(1,1,1,1,1,1,1,1,1)", 24000);
+    mTxa = setTimeout("moveEffects(2,2,1,1,2,1,1,1,2)", 24500);
+    mTya = setTimeout("moveEffects(0,0,1,1,0,1,1,1,0)", 25000);
+    mTza = setTimeout("moveEffects(1,1,2,2,1,2,2,2,1)", 25500);
+    mTab = setTimeout("moveEffects(1,1,0,0,1,0,0,0,1)", 26000);
+    mTbb = setTimeout("moveEffects(1,2,1,2,2,2,1,2,2)", 26500);
+    mTcb = setTimeout("moveEffects(1,0,1,0,0,0,1,0,0)", 27000);
+    mTdb = setTimeout("moveEffects(2,7,2,6,4,5,2,3,5)", 27500);
+    mTeb = setTimeout("moveEffects(0,7,0,6,4,5,0,3,5)", 28000);
+    mTfb = setTimeout("moveEffects(2,7,2,6,4,5,2,3,5)", 27500);
+    mTgb = setTimeout("moveEffects(0,7,0,6,4,5,0,3,5)", 28000);
+    }
+}
+var moveComplete = function () {
+    localStorage.level++
+    checkLevel();
+}
+var moveEffects = function (a,b,c,d,e,f,g,h,i) {
+    listLoc = [];
+    setAllVars(a,b,c,d,e,f,g,h,i);
+    transferN();
+    drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    if (moveGo && moveValid) {
+    moveValid = false;
+    checkMoveOverlap();
+    moveValid = true;
+    }
+}
+var checkMoveOverlap = function () {
+    if (one == 0 && locate == 1) {
+        drawLevel();
+    }
+    if (two == 0 && locate == 2) {
+        drawLevel();
+    }
+    if (three == 0 && locate == 3) {
+        drawLevel();
+    }
+    if (four == 0 && locate == 4) {
+        drawLevel();
+    }
+    if (five == 0 && locate == 5) {
+        drawLevel();
+    }
+    if (six == 0 && locate == 6) {
+        drawLevel();
+    }
+    if (seven == 0 && locate == 7) {
+        drawLevel();
+    }
+    if (eight == 0 && locate == 8) {
+        drawLevel();
+    }
+    if (nine == 0 && locate == 9) {
+        drawLevel();
+    }
+}
+var addRumble = function (a) {
+    if (a) {
+        rumble++;
+    }
+    else {
+        rumble--;
+    }
+    drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+}
+var clearRumble = function () {
+    clearTimeout(waitForMask);
+    clearTimeout(rTa);
+    clearTimeout(rTb);
+    clearTimeout(rTc);
+    clearTimeout(rTd);
+    clearTimeout(rTe);
+    clearTimeout(rTf);
+    clearTimeout(rTg);
+    clearTimeout(rTh);
+    clearTimeout(rTi);
+    clearTimeout(rTj);
+    clearTimeout(rTk);
+    clearTimeout(rTl);
+    clearTimeout(rTm);
+    clearTimeout(rTn);
+    clearTimeout(rTo);
+    clearTimeout(rTp);
+    clearTimeout(rTq);
+    clearTimeout(rTr);
+    clearTimeout(rTs);
+    clearTimeout(rTt);
+    clearTimeout(rTu);
+    clearTimeout(rTv);
+    clearTimeout(rTw);
+    clearTimeout(rTx);
+    clearTimeout(rTy);
+    clearTimeout(rTz);
+}
+var rTa;
+var rTb;
+var rTc;
+var rTd;
+var rTe;
+var rTf;
+var rTg;
+var rTh;
+var rTi;
+var rTj;
+var rTk;
+var rTl;
+var rTm;
+var rTn;
+var rTo;
+var rTp;
+var rTq;
+var rTr;
+var rTs;
+var rTt;
+var rTu;
+var rTv;
+var rTw;
+var rTx;
+var rTy;
+var rTz;
+var rumbleEffect = function () {
+    rumble = 0;
+    rTa = setTimeout("addRumble(true)", 100);
+    rTb = setTimeout("addRumble(true)", 200);
+    rTc = setTimeout("addRumble(true)", 300);
+    rTd = setTimeout("addRumble(true)", 400);
+    rTe = setTimeout("addRumble(true)", 500);
+    rTf = setTimeout("addRumble(false)", 600);
+    rTg = setTimeout("addRumble(false)", 700);
+    rTh = setTimeout("addRumble(false)", 800);
+    rTi = setTimeout("addRumble(false)", 900);
+    rTj = setTimeout("addRumble(false)", 1000);
+    rTk = setTimeout("addRumble(false)", 1100);
+    rTl = setTimeout("addRumble(false)", 1200);
+    rTm = setTimeout("addRumble(false)", 1300);
+    rTn = setTimeout("addRumble(false)", 1400);
+    rTo = setTimeout("addRumble(false)", 1500);
+    rTp = setTimeout("addRumble(true)", 1600);
+    rTq = setTimeout("addRumble(true)", 1700);
+    rTr = setTimeout("addRumble(true)", 1800);
+    rTs = setTimeout("addRumble(true)", 1900);
+    rTt = setTimeout("addRumble(true)", 2000);
+}
+var beginRumble;
 // Check to see if overlap occured
 var x;
 var y;
 var sortedListLoc = [];
 var checkOverlap = function(a, b, c, d, e, f, g, h, i) {
+if (!(moveGo)) {
 sortedListLoc = listLoc.sort();
 x = 0
 y = 0
@@ -170,60 +2307,91 @@ for (y=0; sortedListLoc[x] == 1; x++) {
     y++;
 }
 if (y > a) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 2; x++) {
     y++;
 }
 if (y > b) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 3; x++) {
     y++;
 }
 if (y > c) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 4; x++) {
     y++;
 }
 if (y > d) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 5; x++) {
     y++;
 }
 if (y > e) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 6; x++) {
     y++;
 }
 if (y > f) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 7; x++) {
     y++;
 }
 if (y > g) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 8; x++) {
     y++;
 }
 if (y > h) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
     for (y=0; sortedListLoc[x] == 9; x++) {
     y++;
 }
 if (y > i) {
-    drawLevel(one, two, three, four, five, six, seven, eight, nine)
+    drawLevel();
 }
-    alert(listLoc)
+if (listLoc.sort().join(',')=== win.sort().join(',')){
+    localStorage.level++
+    checkLevel();
+    locate = 1;
+    listLoc = [];
+    listLoc = [1];
+    drawLevel();
+}
+}
 };
-
 checkLevel();
+// Click Info Detection
+canvas.addEventListener("mousedown", getPosition, false)
+
+function getPosition(event) {
+    x = event.x;
+    y = event.y;
+    x -= canvas.offsetLeft;
+    y -= canvas.offsetTop;
+    if ((x < 341 && x > 299) && (y < 51 && y > 9)) {
+        if (showInfo == 0) {
+        showInfo = 1;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+        }
+        else {
+        showInfo = 0;
+        drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+        }
+    }
+    else if (((x < 51 && x > 9) && (y < 51 && y > 9)) && randomCounter == 1) {
+        activate = 0;
+        randomLevel();
+        drawLevel();
+    }
+}
 // Swipe Detection
 document.addEventListener('touchstart', handleTouchStart, false);        
 document.addEventListener('touchmove', handleTouchMove, false);
@@ -252,36 +2420,42 @@ function handleTouchMove(evt) {
                 listLoc.push(2);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 2) {
                 locate = 1;
                 listLoc.push(1);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 6) {
                 locate = 5;
                 listLoc.push(5);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 5) {
                 locate = 4;
                 listLoc.push(4);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 9) {
                 locate = 8;
                 listLoc.push(8);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 8) {
                 locate = 7;
                 listLoc.push(7);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
         } else {
             if (locate == 1) {
@@ -289,36 +2463,42 @@ function handleTouchMove(evt) {
                 listLoc.push(2);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 2) {
                 locate = 3;
                 listLoc.push(3);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 4) {
                 locate = 5;
                 listLoc.push(5);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 5) {
                 locate = 6;
                 listLoc.push(6);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 7) {
                 locate = 8;
                 listLoc.push(8);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 8) {
                 locate = 9;
                 listLoc.push(9);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
         }                       
     } else {
@@ -328,36 +2508,42 @@ function handleTouchMove(evt) {
                 listLoc.push(4);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 8) {
                 locate = 5;
                 listLoc.push(5);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 9) {
                 locate = 6;
                 listLoc.push(6);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 4) {
                 locate = 1;
                 listLoc.push(1);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 5) {
                 locate = 2;
                 listLoc.push(2);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 6) {
                 locate = 3;
                 listLoc.push(3);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
         } else { 
             if (locate == 1) {
@@ -365,36 +2551,42 @@ function handleTouchMove(evt) {
                 listLoc.push(4);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 2) {
                 locate = 5;
                 listLoc.push(5);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 3) {
                 locate = 6;
                 listLoc.push(6);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 4) {
                 locate = 7;
                 listLoc.push(7);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 5) {
                 locate = 8;
                 listLoc.push(8);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
             else if (locate == 6) {
                 locate = 9;
                 listLoc.push(9);
                 checkOverlap(one, two, three, four, five, six, seven, eight, nine);
                 locatePlayer();
+                reduceValue();
             }
         }                                                                 
     }
@@ -405,7 +2597,7 @@ function handleTouchMove(evt) {
 </script>
     <style>
     body {
-            background-color: gray
+            background-color: #d9d9d9;
         }
     </style>
     </body>
