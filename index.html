@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html>
+    <head>
+            <!--<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+         <script type="text/javascript" charset="utf-8" src="intelxdk.js"></script>-->
+
+    </head>
     <body>
-        <audio id="myAudio">
-            <source src="song.mp3" type="audio/mp3">
+    
+<!--    <script type="text/javascript" charset="utf-8" src="cordova.js"></script> -->
+        <!--<audio id="myAudio">
+            <source src="sounds/thefatrat-timelapse.mp3" type="audio/mp3">
             <!--<source src="mysongs/song1.ogg" type="audio/ogg; codecs=vorbis">-->
-           </audio>
+           <!--</audio>-->
 <canvas id="canvas"></canvas>
         <p id="p"></p>
         <script>
-var myAudio = document.getElementById("myAudio");
-myAudio.play();
+//intel.xdk.device.hideSplashScreen();
+//var myAudio = document.getElementById("myAudio");
+//myAudio.play();
+//var mediaObject = new Media("sounds/thefatrat-timelapse.mp3");
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = "375";
 canvas.height = "555";
-localStorage.level = 99;
 var width = canvas.width;
 var height = canvas.height;
 var one;
@@ -32,6 +40,8 @@ var win = [];
 var activate = 0;
 var maxLevel;
 var showInfo = 0;
+//mediaObject.play();
+//intel.xdk.player.startAudio("sounds/thefatrat-timelapse.mp3", true);
 // Circles!
 var circle = function (x, y, radius, fillCircle) {
     ctx.beginPath();
@@ -51,13 +61,6 @@ var graphicCircle = function(a,b,c,d,e,f,g,h) {
     ctx.moveTo(e, f);
     ctx.lineTo(g, h);
     ctx.stroke();
-}
-function wait(ms){
-   var start = new Date().getTime();
-   var end = start;
-   while(end < start + ms) {
-     end = new Date().getTime();
-  }
 }
 var drawName = function() {
     ctx.beginPath();
@@ -1020,6 +1023,27 @@ var drawText = function () {
         textValue = "Lose! I am undefeatable!!!";
         ctx.fillText(textValue, posX, posY);
     }
+    else if (Number(localStorage.level) == 101) {
+        textValue = "More updates will include more";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "levels in the future.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 102) {
+        textValue = "Thank you for getting so far, and so,";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "now you can play as many levels as";
+        ctx.fillText(textValue, posX, posY);
+        posY += 18;
+        textValue = "you wish.";
+        ctx.fillText(textValue, posX, posY);
+    }
+    else if (Number(localStorage.level) == 103) {
+        textValue = "You have won...";
+        ctx.fillText(textValue, posX, posY);
+    }
 }
 var maxChars;
 var charsLeft;
@@ -1420,7 +1444,7 @@ if(!(localStorage.level)) {
     localStorage.level = 1;
 }
 clearTimeout(timerId);
-maxLevel = 100;
+maxLevel = 103;
 win = [];
 clearInterval(timerId);
 maxChars = 7;
@@ -1880,12 +1904,33 @@ if (Number(localStorage.level) == 100) {
     beginRumble = true;
     moveGo = true;
 }
+if (Number(localStorage.level) == 101) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    activate = 0;
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 102) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
+if (Number(localStorage.level) == 103) {
+    setAllVars(1,0,0,1,0,0,0,0,0);
+    createWin();
+    clearRumble();
+    beginRumble = true;
+}
 if (Number(localStorage.level) > maxLevel + 1) {
+    clearRumble();
     localStorage.level = maxLevel;
     randomCounter = 1;
     randomLevel();
 }
 else if (Number(localStorage.level) == maxLevel + 1) {
+    clearRumble();
     localStorage.level = maxLevel;
     randomCounter = 1;
     randomLevel();
@@ -2158,12 +2203,25 @@ var beginMovement = function () {
     mTcb = setTimeout("moveEffects(1,0,1,0,0,0,1,0,0)", 27000);
     mTdb = setTimeout("moveEffects(2,7,2,6,4,5,2,3,5)", 27500);
     mTeb = setTimeout("moveEffects(0,7,0,6,4,5,0,3,5)", 28000);
-    mTfb = setTimeout("moveEffects(2,7,2,6,4,5,2,3,5)", 27500);
-    mTgb = setTimeout("moveEffects(0,7,0,6,4,5,0,3,5)", 28000);
+    mTfb = setTimeout("moveEffects(1,2,2,2,2,2,2,2,1)", 28500);
+    mTgb = setTimeout("moveEffects(1,0,0,0,0,0,0,0,1)", 29000);
+    mThb = setTimeout("moveEffects(1,1,1,0,0,1,0,0,2)", 29500);
+    mTib = setTimeout("moveEffects(1,1,1,0,0,2,0,0,0)", 30000);
+    mTjb = setTimeout("moveEffects(1,1,2,0,0,0,0,0,0)", 30500);
+    mTkb = setTimeout("moveEffects(1,1,0,0,0,0,0,0,0)", 31000);
+    mTlb = setTimeout("moveEffects(2,1,1,0,0,0,0,0,0)", 31500);
+    mTmb = setTimeout("moveEffects(0,2,1,0,0,1,0,0,0)", 32000);
+    mTnb = setTimeout("moveEffects(0,0,2,0,0,1,0,0,1)", 32500);
+    mTob = setTimeout("moveEffects(0,0,0,0,0,2,0,1,1)", 33000);
+    mTpb = setTimeout("moveEffects(0,0,0,0,1,0,0,1,2)", 33500);
+    mTqb = setTimeout("moveEffects(0,0,0,1,1,0,0,2,0)", 34000);
+    mTrb = setTimeout("moveEffects(0,0,0,1,2,0,1,0,0)", 34500);
+    mTsb = setTimeout("moveEffects(0,0,0,2,0,0,1,0,0)", 35000);
+    mTtb = setTimeout("moveComplete()", 35500);
     }
 }
 var moveComplete = function () {
-    localStorage.level++
+    localStorage.level++;
     checkLevel();
 }
 var moveEffects = function (a,b,c,d,e,f,g,h,i) {
