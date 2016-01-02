@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "0f52ae54-7844-487f-8076-503acb1e09df",
-      "lastModifiedDate": 1449198849820,
+      "lastModifiedDate": 1451759127176,
       "creationDate": 1449196343508
     },
     "sourceDirectory": "",
@@ -49,7 +49,9 @@
         "preferences_": {
           "android-minSdkVersion": "14",
           "android-targetSdkVersion": "19",
-          "android-installLocation": "auto"
+          "android-installLocation": "auto",
+          "Orientation": "portrait",
+          "Fullscreen": true
         },
         "isActive_": true,
         "appName_": "Abox",
@@ -62,14 +64,41 @@
           "intents": [],
           "navigation": []
         },
-        "icons_": [],
+        "icons_": [
+          {
+            "relPath": "aboxlogo36.png",
+            "density": "ldpi",
+            "height": 36,
+            "width": 36
+          },
+          {
+            "relPath": "aboxlogo48.png",
+            "density": "mdpi",
+            "height": 48,
+            "width": 48
+          },
+          {
+            "relPath": "aboxlogo72.png",
+            "density": "hdpi",
+            "height": 72,
+            "width": 72
+          },
+          {
+            "relPath": "aboxlogo96.png",
+            "density": "xhdpi",
+            "height": 96,
+            "width": 96
+          }
+        ],
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.1",
+        "appVersion_": "1.0.0",
         "appVersionCode_": "1",
         "crosswalkVersion_": "14",
-        "cordovaCLIVersion_": "5.1.1"
+        "cordovaCLIVersion_": "5.1.1",
+        "appDescription_": "A puzzle game made for endless entertainment.",
+        "appAuthor_": "Aworld Games"
       },
       "Android-Crosswalk": {
         "platform_": "android",
