@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "0f52ae54-7844-487f-8076-503acb1e09df",
-      "lastModifiedDate": 1451759127176,
+      "lastModifiedDate": 1454128747672,
       "creationDate": 1449196343508
     },
     "sourceDirectory": "",
@@ -55,7 +55,7 @@
         },
         "isActive_": true,
         "appName_": "Abox",
-        "appID_": "not.yet.specified",
+        "appID_": "com.aworld.abox",
         "appAccess_": {
           "mode": "legacy",
           "network": [
@@ -93,8 +93,8 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "1.0.0",
-        "appVersionCode_": "1",
+        "appVersion_": "1.0.2",
+        "appVersionCode_": "3",
         "crosswalkVersion_": "14",
         "cordovaCLIVersion_": "5.1.1",
         "appDescription_": "A puzzle game made for endless entertainment.",
@@ -107,11 +107,13 @@
         "preferences_": {
           "android-minSdkVersion": "14",
           "android-targetSdkVersion": "19",
-          "android-installLocation": "auto"
+          "android-installLocation": "auto",
+          "Orientation": "portrait",
+          "Fullscreen": true
         },
         "isActive_": true,
         "appName_": "Abox",
-        "appID_": "not.yet.specified",
+        "appID_": "com.aworld.abox",
         "appAccess_": {
           "mode": "legacy",
           "network": [
@@ -124,8 +126,8 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.1",
-        "appVersionCode_": "1",
+        "appVersion_": "1.0.2",
+        "appVersionCode_": "3",
         "crosswalkVersion_": "15",
         "cordovaCLIVersion_": "5.1.1"
       },
@@ -134,12 +136,14 @@
         "runtime_": "W3C on Cordova",
         "name_": "iOS",
         "preferences_": {
-          "ios-target": "6",
-          "ios-configuration": "adhoc"
+          "ios-target": "8.0",
+          "ios-configuration": "production",
+          "Fullscreen": true,
+          "Orientation": "portrait"
         },
         "isActive_": true,
         "appName_": "Abox",
-        "appID_": "not.yet.specified",
+        "appID_": "com.aworld.abox",
         "appAccess_": {
           "mode": "legacy",
           "network": [
@@ -148,22 +152,115 @@
           "intents": [],
           "navigation": []
         },
-        "icons_": [],
+        "icons_": [
+          {
+            "relPath": "abox29.png",
+            "height": 29,
+            "width": 29
+          },
+          {
+            "relPath": "Abox58.png",
+            "height": 58,
+            "width": 58
+          },
+          {
+            "relPath": "Abox87.png",
+            "height": 87,
+            "width": 87
+          },
+          {
+            "relPath": "Abox60.png",
+            "height": 60,
+            "width": 60
+          },
+          {
+            "relPath": "Abox120.png",
+            "height": 120,
+            "width": 120
+          },
+          {
+            "relPath": "Abox180.png",
+            "height": 180,
+            "width": 180
+          },
+          {
+            "relPath": "Abox76.png",
+            "height": 76,
+            "width": 76
+          },
+          {
+            "relPath": "Abox152.png",
+            "height": 152,
+            "width": 152
+          },
+          {
+            "relPath": "Abox40.png",
+            "height": 40,
+            "width": 40
+          },
+          {
+            "relPath": "Abox80.png",
+            "height": 80,
+            "width": 80
+          },
+          {
+            "relPath": "Abox57.png",
+            "height": 57,
+            "width": 57
+          },
+          {
+            "relPath": "Abox114.png",
+            "height": 114,
+            "width": 114
+          },
+          {
+            "relPath": "Abox72.png",
+            "height": 72,
+            "width": 72
+          },
+          {
+            "relPath": "Abox144.png",
+            "height": 144,
+            "width": 144
+          },
+          {
+            "relPath": "Abox50.png",
+            "height": 50,
+            "width": 50
+          },
+          {
+            "relPath": "Abox100.png",
+            "height": 100,
+            "width": 100
+          }
+        ],
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.1",
+        "appVersion_": "1.0.1",
         "cordovaCLIVersion_": "5.1.1",
-        "iosProvs_": []
+        "iosProvs_": [
+          {
+            "relPath": "certificate/Abox_provisioning_profile.mobileprovision",
+            "type": "production"
+          }
+        ],
+        "appDescription_": "A puzzle game made for endless entertainment.",
+        "appAuthor_": "Aworld Games"
       },
       "Windows8": {
         "platform_": "windows8",
         "runtime_": "W3C on Cordova",
         "name_": "Windows8",
-        "preferences_": {},
+        "preferences_": {
+          "Fullscreen": true,
+          "Orientation": "portrait",
+          "windows-publisher-id": "",
+          "windows-publisher-display-name": "Aworld Games"
+        },
         "isActive_": true,
         "appName_": "Abox",
-        "appID_": "not.yet.specified",
+        "appID_": "com.aworld.abox",
         "appAccess_": {
           "mode": "legacy",
           "network": [
@@ -172,12 +269,30 @@
           "intents": [],
           "navigation": []
         },
-        "icons_": [],
+        "icons_": [
+          {
+            "relPath": "Abox58.png",
+            "height": 58,
+            "width": 58
+          },
+          {
+            "relPath": "Abox50.png",
+            "height": 50,
+            "width": 50
+          },
+          {
+            "relPath": "Abox120.png",
+            "height": 120,
+            "width": 120
+          }
+        ],
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.0.1",
-        "cordovaCLIVersion_": "5.1.1"
+        "appVersion_": "1.0.2",
+        "cordovaCLIVersion_": "5.1.1",
+        "appDescription_": "A puzzle game made for endless entertainment.",
+        "appAuthor_": "Aworld Games"
       },
       "WebApp": {
         "platform_": "webapp",
