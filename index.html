@@ -22,7 +22,7 @@
 var screenWidth = window.screen.availWidth;
 var screenHeight = window.screen.availHeight;
 var screenWidthRatio = screenWidth / 384;
-var screenHeightRatio = screenHeight / 610;
+var screenHeightRatio = screenHeight / 655;
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = "375" * screenWidthRatio;
@@ -45,6 +45,7 @@ var win = [];
 var activate = 0;
 var maxLevel;
 var showInfo = 1;
+var allowDraw = true;
 //mediaObject.play();
 //intel.xdk.player.startAudio("sounds/thefatrat-timelapse.mp3", true);
 // Circles!
@@ -220,12 +221,20 @@ var drawPlayMat = function () {
     ctx.clearRect(0, 0, width, heightA);
     ctx.fillStyle="dimgray";
     ctx.strokeStyle = "Gray";
+    if (!gameLaunch) {
+        ctx.globalAlpha = 0.5;
+    }
     ctx.fillRect((30 + rumble) * screenWidthRatio,70 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
     ctx.fillRect((150 + rumble) * screenWidthRatio,70 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
     ctx.fillRect((270 + rumble) * screenWidthRatio,70 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
     ctx.fillRect((30 + rumble) * screenWidthRatio,190 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
+    ctx.globalAlpha = 1;
     ctx.fillRect((150 + rumble) * screenWidthRatio,190 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
+    if (!gameLaunch) {
+        ctx.globalAlpha = 0.5;
+    }
     ctx.fillRect((270 + rumble) * screenWidthRatio,190 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
+    ctx.globalAlpha = 1;
     ctx.fillRect((30 + rumble) * screenWidthRatio,310 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
     ctx.fillRect((150 + rumble) * screenWidthRatio,310 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
     ctx.fillRect((270 + rumble) * screenWidthRatio,310 * screenHeightRatio,70 * screenWidthRatio,70 * screenHeightRatio);
@@ -443,8 +452,10 @@ var drawContents = function(a, b, c, d, e, f, g, h, i) {
 var beginText = function () {
     localStorage.level;
     localStorage.highestLevel;
-    if(!(localStorage.level) || !(localStorage.highestLevel)) {
+    if(!(localStorage.level)) {
         localStorage.level = 1;
+    }
+    if(!(localStorage.highestLevel)) {
         localStorage.highestLevel = 1;
     }
     maxLevel = 103;
@@ -452,8 +463,8 @@ var beginText = function () {
     ctx.strokeStyle = "gray";
     ctx.lineWidth = 4 * screenWidthRatio;
     ctx.beginPath();
-    ctx.font = (30 * screenWidthRatio) + 'pt Calibri';
-    posX = 150 * screenWidthRatio;
+    ctx.font = (20 * screenWidthRatio) + 'pt Calibri';
+    posX = 154 * screenWidthRatio;
     posY = 235 * screenHeightRatio;
     textValue = "Play";
     ctx.fillText(textValue, posX, posY);
@@ -487,11 +498,277 @@ var beginArrows = function () {
     ctx.stroke();
 }
 var beginPage = function () {
+    rumble = 0;
+    randomCounter = 0;
+    gameLaunch = false;
     drawPlayMat();
     drawName();
     drawInfo();
     beginText();
     beginArrows();
+    drawPreview();
+}
+var drawPreview = function () {
+    allowDraw = false;
+    checkLevel();
+    allowDraw = true;
+    drawPreviewBoxes();
+    drawPreviewText();
+}
+var drawPreviewText = function () {
+    ctx.fillStyle="dimgray";
+    ctx.strokeStyle = "dimgray";
+    ctx.lineWidth = 4 * screenWidthRatio;
+    ctx.beginPath();
+    ctx.font = (15 * screenWidthRatio) + 'pt Calibri';
+    posX = 260 * screenWidthRatio;
+    posY = 405 * screenHeightRatio;
+    if (beginRumble) {
+    textValue = "Rumble";
+    ctx.fillText(textValue, posX, posY);
+    }
+    posY += spaceLines;
+    if (maskGo) {
+    textValue = "Mask";
+    ctx.fillText(textValue, posX, posY);
+    }
+    posY += spaceLines;
+    if (bossGo) {
+    textValue = "Timed";
+    ctx.fillText(textValue, posX, posY);
+    }
+    posY += spaceLines;
+    if (moveGo) {
+    textValue = "Bossfight";
+    ctx.fillText(textValue, posX, posY);
+    }
+}
+var drawPreviewBoxes = function () {
+    if (one == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (one == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (one == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (one == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (one == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (one == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (one == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(130 * screenWidthRatio,400 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (two == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (two == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (two == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (two == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (two == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (two == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (two == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(170 * screenWidthRatio,400 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (three == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (three == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (three == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (three == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (three == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (three == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (three == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(210 * screenWidthRatio,400 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (four == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (four == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (four == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (four == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (four == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (four == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (four == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(130 * screenWidthRatio,440 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (five == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (five == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (five == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (five == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (five == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (five == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (five == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(170 * screenWidthRatio,440 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (six == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (six == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (six == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (six == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (six == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (six == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (six == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(210 * screenWidthRatio,440 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (seven == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (seven == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (seven == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (seven == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (seven == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (seven == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (seven == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(130 * screenWidthRatio,480 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (eight == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (eight == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (eight == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (eight == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (eight == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (eight == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (eight == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(170 * screenWidthRatio,480 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
+    if (nine == 0) {
+        ctx.fillStyle = "crimson";
+    }
+    else if (nine == 2) {
+        ctx.fillStyle = "darkOrange";
+    }
+    else if (nine == 3) {
+        ctx.fillStyle = "gold";
+    }
+    else if (nine == 4) {
+        ctx.fillStyle = "lime";
+    }
+    else if (nine == 5) {
+        ctx.fillStyle = "skyblue";
+    }
+    else if (nine == 6) {
+        ctx.fillStyle = "darkblue";
+    }
+    else if (nine == 7) {
+        ctx.fillStyle = "purple";
+    }
+    else {
+        ctx.fillStyle = "dimgray";
+    }
+    ctx.fillRect(210 * screenWidthRatio,480 * screenHeightRatio,20 * screenWidthRatio,20 * screenHeightRatio);
 }
 var drawRelevel = function () {
     if (randomCounter == 1) {
@@ -512,6 +789,17 @@ var drawRelevel = function () {
         ctx.lineTo(10 * screenWidthRatio,50 * screenHeightRatio);
         ctx.lineTo(20 * screenWidthRatio,60 * screenHeightRatio);
         ctx.stroke();
+    }
+    else if (localStorage.level == 30 || localStorage.level == 53 || localStorage.level == 100) {
+        ctx.fillStyle="gray";
+        ctx.strokeStyle = "gray";
+        ctx.lineWidth = 4 * screenWidthRatio;
+        ctx.beginPath();
+        ctx.font = (20 * screenWidthRatio) + 'pt Calibri';
+        posX = 10 * screenWidthRatio;
+        posY = 30 * screenHeightRatio;
+        textValue = "Skip";
+        ctx.fillText(textValue, posX, posY);
     }
 }
 var drawInfo = function () {
@@ -605,7 +893,7 @@ var drawText = function () {
         textValue = "around the screen. You should notice";
         ctx.fillText(textValue, posX, posY);
         posY += spaceLines;
-        textValue = "symbol appearing on squares you have";
+        textValue = "symbols appearing on squares you have";
         ctx.fillText(textValue, posX, posY);
         posY += spaceLines;
         textValue = "hopped on (you are the blue dot).";
@@ -1364,7 +1652,7 @@ var timedChallenge = function () {
     timerId = setInterval(countdown, 1000);
     }
 function countdown() {
-  if (timeLeft == 0) {
+  if (timeLeft == 0 && gameLaunch) {
     clearTimeout(timerId);
     activate = 0;
     checkLevel();
@@ -1377,6 +1665,7 @@ var posX;
 var stopOverlap = 0;
 var posY;
 var drawClock = function (a) {
+    if (gameLaunch) {
     stopOverlap = 1;
     drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
     stopOverlap = 0;
@@ -1395,6 +1684,7 @@ var drawClock = function (a) {
     ctx.fillStyle = 'dimgray';
     ctx.fillText(a, posX, posY);
     circle(185 * screenWidthRatio, 440 * screenHeightRatio, 30 * screenWidthRatio, false);
+    }
 }
 var oneA;
 var twoA;
@@ -1483,7 +1773,11 @@ var waitForMask;
 var beginMask = function () {
     waitForMask = setTimeout("heptaMask()", 5000);
 }
+var clearMask = function () {
+    clearTimeout(waitForMask);
+}
 var heptaMask = function () {
+    if (gameLaunch && maskGo) {
     oneA = 7;
     twoA = 7;
     threeA = 7;
@@ -1494,6 +1788,7 @@ var heptaMask = function () {
     eightA = 7;
     nineA = 7;
     drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
+    }
 }
 var setAllVars = function (a,b,c,d,e,f,g,h,i) {
     one = a;
@@ -1511,10 +1806,13 @@ var bossGo;
 var maskGo;
 var moveValid = true;
 var checkLevel = function() {
+if (allowDraw) {
 localStorage.level;
 localStorage.highestLevel;
 if(!(localStorage.level)) {
     localStorage.level = 1;
+}
+if(!(localStorage.highestLevel)) {
     localStorage.highestLevel = 1;
 }
 clearTimeout(timerId);
@@ -1522,12 +1820,15 @@ maxLevel = 103;
 win = [];
 clearInterval(timerId);
 maxChars = 7;
+}
 bossGo = false;
 maskGo = false;
 beginRumble = false;
 moveGo = false;
 timeOn = false;
+if (allowDraw) {
 gameLaunch = true;
+}
 rumble = 0;
 if (Number(localStorage.level) == 1) {
     setAllVars(1,1,1,1,1,1,1,1,1);
@@ -1998,6 +2299,7 @@ if (Number(localStorage.level) == 103) {
     clearRumble();
     beginRumble = true;
 }
+if (allowDraw) {
 if (Number(localStorage.level) > maxLevel + 1) {
     clearRumble();
     localStorage.level = maxLevel;
@@ -2014,19 +2316,29 @@ if (Number(localStorage.level) > Number(localStorage.highestLevel)) {
     localStorage.highestLevel = localStorage.level;
 }
 drawLevel();
+}
 if (beginRumble) {
     showInfo = 1;
+    if (allowDraw) {
     rumbleEffect();
+    }
 }
 if (maskGo) {
+    if (allowDraw) {
     beginMask();
+    }
 }
 if (bossGo) {
+    if (allowDraw) {
     timedChallenge();
+    }
 }
 if (moveGo) {
+    if (allowDraw) {
     beginMovement();
+    }
 }
+
 };
 var clearEffects = function () {
     clearTimeout(mTa);
@@ -2299,6 +2611,7 @@ var beginMovement = function () {
     }
 }
 var moveComplete = function () {
+    clearRumble();
     localStorage.level++;
     checkLevel();
 }
@@ -2503,8 +2816,8 @@ if (listLoc.sort().join(',')=== win.sort().join(',')){
 }
 }
 };
-checkLevel();
-//beginPage();
+//checkLevel();
+beginPage();
 // Click Info Detection
 canvas.addEventListener("mousedown", getPosition, false)
 
@@ -2523,12 +2836,19 @@ function getPosition(event) {
         drawContents(oneA, twoA, threeA, fourA, fiveA, sixA, sevenA, eightA, nineA);
         }
     }
-    else if (((x < 51 * screenWidthRatio && x > 9 * screenWidthRatio) && (y < 51 * screenHeightRatio && y > 9 * screenHeightRatio)) && randomCounter == 1) {
+    else if (((x < 51 * screenWidthRatio && x > 9 * screenWidthRatio) && (y < 51 * screenHeightRatio && y > 9 * screenHeightRatio)))  {
+        if (randomCounter == 1) {
         activate = 0;
         randomLevel();
         drawLevel();
+        }
+        else if ((localStorage.level == 30 || localStorage.level == 53 || localStorage.level == 100) && gameLaunch) {
+            clearEffects();
+            moveComplete();
+        }
     }
     else if (((x < 221 * screenWidthRatio && x > 149 * screenWidthRatio) && (y < 261 * screenHeightRatio && y > 189 * screenWidthRatio && !(gameLaunch)))) {
+        gameLaunch = true;
         checkLevel();
     }
     else if (((x < 101 * screenWidthRatio && x > 29 * screenWidthRatio) && (y < 381 * screenHeightRatio && y > 309 * screenWidthRatio && !(gameLaunch) && !(localStorage.level == 1)))) {
@@ -2538,6 +2858,14 @@ function getPosition(event) {
     else if (((x < 341 * screenWidthRatio && x > 269 * screenWidthRatio) && (y < 381 * screenHeightRatio && y > 309 * screenWidthRatio) && !(gameLaunch) && ((Number(localStorage.level) < maxLevel) && (Number(localStorage.level) < Number(localStorage.highestLevel))))) {
         localStorage.level++;
         beginPage();
+    }
+    else if (((x < 261 * screenWidthRatio && x > 99 * screenWidthRatio) && (y < 61 * screenHeightRatio && y > -1 * screenWidthRatio && gameLaunch))) {
+        clearMask();
+        clearEffects();
+        clearRumble();
+        beginPage();
+        gameLaunch = false;
+        activate = 0;
     }
 }
 // Swipe Detection

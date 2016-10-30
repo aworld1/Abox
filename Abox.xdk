@@ -1,12 +1,12 @@
 {
   "project": {
-    "projectSettingsVersion": "2.0.0",
+    "projectSettingsVersion": "3.0.0",
     "creationData": {
       "type": "Import",
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "0f52ae54-7844-487f-8076-503acb1e09df",
-      "lastModifiedDate": 1454128747672,
+      "lastModifiedDate": 1468084872009,
       "creationDate": 1449196343508
     },
     "sourceDirectory": "",
@@ -21,7 +21,15 @@
     "projectTags": [
       "XDK-game-app"
     ],
-    "projectFiles": {},
+    "projectFiles": {
+      "xdk-publish-meta-data.json": {
+        "settings": {
+          "project": {
+            "XDK-not-deployed": "True"
+          }
+        }
+      }
+    },
     "projectDirectories": {
       "xdk": {
         "settings": {
@@ -90,67 +98,67 @@
             "width": 96
           }
         ],
-        "splashes_": [],
+        "splashes_": [
+          {
+            "relPath": "Abox360x426.png",
+            "density": "ldpi",
+            "height": 426,
+            "width": 320,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox320x470.png",
+            "density": "mdpi",
+            "height": 470,
+            "width": 320,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox480x640.png",
+            "density": "hdpi",
+            "height": 640,
+            "width": 480,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox720x960.png",
+            "density": "xhdpi",
+            "height": 960,
+            "width": 720,
+            "orientation": "portrait"
+          }
+        ],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "1.0.2",
-        "appVersionCode_": "3",
-        "crosswalkVersion_": "14",
+        "certificateId_": "",
+        "appVersion_": "1.0.3.1",
+        "appVersionCode_": "5",
         "cordovaCLIVersion_": "5.1.1",
         "appDescription_": "A puzzle game made for endless entertainment.",
-        "appAuthor_": "Aworld Games"
-      },
-      "Android-Crosswalk": {
-        "platform_": "android",
-        "runtime_": "W3C on Crosswalk",
-        "name_": "Android-Crosswalk",
-        "preferences_": {
-          "android-minSdkVersion": "14",
-          "android-targetSdkVersion": "19",
-          "android-installLocation": "auto",
-          "Orientation": "portrait",
-          "Fullscreen": true
-        },
-        "isActive_": true,
-        "appName_": "Abox",
-        "appID_": "com.aworld.abox",
-        "appAccess_": {
-          "mode": "legacy",
-          "network": [
-            "*"
-          ],
-          "intents": [],
-          "navigation": []
-        },
-        "icons_": [],
-        "splashes_": [],
-        "addlPermissions_": "",
-        "excludedLibraries_": "",
-        "appVersion_": "1.0.2",
-        "appVersionCode_": "3",
-        "crosswalkVersion_": "15",
-        "cordovaCLIVersion_": "5.1.1"
+        "appAuthor_": "Aworld Games",
+        "crosswalkVersion_": "16"
       },
       "iOS": {
         "platform_": "ios",
         "runtime_": "W3C on Cordova",
         "name_": "iOS",
         "preferences_": {
-          "ios-target": "8.0",
           "ios-configuration": "production",
           "Fullscreen": true,
-          "Orientation": "portrait"
+          "Orientation": "portrait",
+          "deployment-target": "6"
         },
         "isActive_": true,
         "appName_": "Abox",
         "appID_": "com.aworld.abox",
         "appAccess_": {
-          "mode": "legacy",
+          "mode": "whitelist",
           "network": [
             "*"
           ],
           "intents": [],
-          "navigation": []
+          "navigation": [],
+          "properties": {}
         },
         "icons_": [
           {
@@ -234,10 +242,54 @@
             "width": 100
           }
         ],
-        "splashes_": [],
+        "splashes_": [
+          {
+            "relPath": "Abox750x1334.png",
+            "height": 1334,
+            "width": 750,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox1242x2208.png",
+            "height": 2208,
+            "width": 1242,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox640x960.png",
+            "height": 960,
+            "width": 640,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox640x1136.png",
+            "height": 1136,
+            "width": 640,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox320x480.png",
+            "height": 480,
+            "width": 320,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox1536x2048.png",
+            "height": 2048,
+            "width": 1536,
+            "orientation": "portrait"
+          },
+          {
+            "relPath": "Abox768x1024.png",
+            "height": 1024,
+            "width": 768,
+            "orientation": "portrait"
+          }
+        ],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "1.0.1",
+        "certificateId_": "",
+        "appVersion_": "1.0.3",
         "cordovaCLIVersion_": "5.1.1",
         "iosProvs_": [
           {
@@ -255,19 +307,21 @@
         "preferences_": {
           "Fullscreen": true,
           "Orientation": "portrait",
-          "windows-publisher-id": "",
-          "windows-publisher-display-name": "Aworld Games"
+          "windows-publisher-id": "CN=B1FADAD5-67B7-4A14-91AD-ACEB41B8F654",
+          "windows-publisher-display-name": "Aworld Games",
+          "wp81-publisher-id": "92567029-14cb-4e09-860b-23a5e405679c"
         },
         "isActive_": true,
         "appName_": "Abox",
-        "appID_": "com.aworld.abox",
+        "appID_": "43879AworldGames.Abox",
         "appAccess_": {
-          "mode": "legacy",
+          "mode": "whitelist",
           "network": [
             "*"
           ],
           "intents": [],
-          "navigation": []
+          "navigation": [],
+          "properties": {}
         },
         "icons_": [
           {
@@ -284,12 +338,118 @@
             "relPath": "Abox120.png",
             "height": 120,
             "width": 120
+          },
+          {
+            "relPath": "Abox24.png",
+            "height": 24,
+            "width": 24
+          },
+          {
+            "relPath": "Abox30.png",
+            "height": 30,
+            "width": 30
+          },
+          {
+            "relPath": "Abox33.png",
+            "height": 33,
+            "width": 33
+          },
+          {
+            "relPath": "Abox70.png",
+            "height": 70,
+            "width": 70
+          },
+          {
+            "relPath": "Abox44.png",
+            "height": 44,
+            "width": 44
+          },
+          {
+            "relPath": "Abox62.png",
+            "height": 62,
+            "width": 62
+          },
+          {
+            "relPath": "Abox71.png",
+            "height": 71,
+            "width": 71
+          },
+          {
+            "relPath": "Abox99.png",
+            "height": 99,
+            "width": 99
+          },
+          {
+            "relPath": "Abox106.png",
+            "height": 106,
+            "width": 106
+          },
+          {
+            "relPath": "Abox150.png",
+            "height": 150,
+            "width": 150
+          },
+          {
+            "relPath": "Abox170.png",
+            "height": 170,
+            "width": 170
+          },
+          {
+            "relPath": "Abox210.png",
+            "height": 210,
+            "width": 210
+          },
+          {
+            "relPath": "Abox360.png",
+            "height": 360,
+            "width": 360
+          },
+          {
+            "relPath": "Abox310x150.png",
+            "height": 150,
+            "width": 310
+          },
+          {
+            "relPath": "Abox434x210.png",
+            "height": 210,
+            "width": 434
+          },
+          {
+            "relPath": "Abox744x360.png",
+            "height": 360,
+            "width": 744
           }
         ],
-        "splashes_": [],
+        "splashes_": [
+          {
+            "relPath": "Abox620x300.png",
+            "height": 300,
+            "width": 620,
+            "orientation": "landscape"
+          },
+          {
+            "relPath": "Abox480x800.png",
+            "height": 800,
+            "width": 480,
+            "orientation": "landscape"
+          },
+          {
+            "relPath": "Abox672x1120.png",
+            "height": 1120,
+            "width": 672,
+            "orientation": "landscape"
+          },
+          {
+            "relPath": "Abox1152x1920.png",
+            "height": 1920,
+            "width": 1152,
+            "orientation": "landscape"
+          }
+        ],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "1.0.2",
+        "certificateId_": "",
+        "appVersion_": "1.0.3",
         "cordovaCLIVersion_": "5.1.1",
         "appDescription_": "A puzzle game made for endless entertainment.",
         "appAuthor_": "Aworld Games"
@@ -314,6 +474,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
+        "certificateId_": "",
         "appVersion_": "0.0.1"
       },
       "Firefox": {
@@ -336,6 +497,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
+        "certificateId_": "",
         "appVersion_": "0.0.1"
       },
       "Chrome": {
@@ -358,6 +520,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
+        "certificateId_": "",
         "appVersion_": "0.0.1"
       },
       "Facebook": {
@@ -380,6 +543,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
+        "certificateId_": "",
         "appVersion_": "0.0.1"
       },
       "WP81": {
@@ -402,6 +566,7 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
+        "certificateId_": "",
         "appVersion_": "0.0.0.1",
         "cordovaCLIVersion_": "5.1.1"
       }
